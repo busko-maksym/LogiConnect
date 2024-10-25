@@ -1,6 +1,7 @@
 from email.mime.text import MIMEText
 import smtplib
 import hashlib
+from pydantic import ValidationError
 
 
 def send_email(body: str, recipients):
@@ -14,3 +15,11 @@ def send_email(body: str, recipients):
 
 
 def hashing(x): return hashlib.sha256(x.encode('utf-8')).hexdigest()
+
+
+def check_model(data: dict, model):
+    try:
+        model(**data)
+        return True
+    except ValidationError:
+        return False

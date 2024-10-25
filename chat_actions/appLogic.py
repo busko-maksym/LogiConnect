@@ -1,12 +1,12 @@
 from chat_actions.models import Chat
-from settings import chat_db, customer_db, messages_db, site_directory
+from settings import user_chat_db, customer_db, messages_db, site_directory
 from typing import List
 from bson import ObjectId
 from datetime import datetime
 
 
 async def create_chat(participants: List[str]):
-    chat = chat_db.chats.find_one({"participants": {"$all": participants}})
+    chat = user_chat_db.find_one({"participants": {"$all": participants}})
 
     if chat:
         return str(chat['_id'])
@@ -17,20 +17,19 @@ async def create_chat(participants: List[str]):
         return {"msg": "User not found"}
 
     new_chat = Chat(participants=participants)
-    result = chat_db.chats.insert_one(new_chat.__dict__)
+    result = user_chat_db.insert_one(new_chat.__dict__)
 
     return {"chat_id": str(result.inserted_id),
             "link": f"{site_directory}/chat/{str(result.inserted_id)}"}
 
 
 def send_message(message, chat_id, user):
-    message_data = message.__dict__
+    message_data = dict(message)
     message_data['timestamp'] = datetime.now()
     message_data['chat_id'] = chat_id
     message_data['sender_id'] = user["user_id"]
     result = messages_db.insert_one(message_data)
 
-    # Update last_message in chat
     messages_db.chats.update_one(
         {"_id": ObjectId(message_data["chat_id"])},
         {
@@ -44,6 +43,17 @@ def send_message(message, chat_id, user):
     return {"message_id": str(result.inserted_id)}
 
 
-def message_list(chat_id):
-    messages = chat_db.messages.find({"chat_id": chat_id})
-    return [msg for msg in messages]
+def message_list(chat_id, user):
+
+    chat = user_chat_db.find_one({"_id": ObjectId(chat_id)})
+    messages = messages_db.find({'chat_id': chat_id})
+
+    x = []
+    for message in messages:
+        message['_id'] = str(message['_id'])
+        x.append(message)
+
+    if user["user_id"] in chat["participants"]:
+        return x
+    else:
+        return {"msg": "User not found"}
