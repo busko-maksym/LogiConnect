@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&family=Unbounded:wght@200..900&display=swap');
+
+.card {
+    width: 150px;
+    height: 115px;
+    border: dashed 3px rgba(0, 0, 0, 1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.1s ease, border 0.1s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card:hover {
+    background-color: #f0f0f0;
+}
+
+.selected {
+    border-color: #007bff;
+    background-color: #e0f2ff;
+    border-width: 5px;
+}
+
+.icon {
+    position: relative;
+    top: -22px;
+    display: flex;
+    justify-content: center;
+}
+
+.title {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+.selectedText {
+    color: rgba(49, 107, 255, 1);
+}
+
+.directionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -1,0 +1,22 @@
+.container {
+    position: absolute;
+    margin-left: 52px;
+    margin-top: 35px;
+}
+
+.container h3 {
+    font-family: "Unbounded";
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24.8px;
+    text-align: left;
+}
+
+.container h4 {
+    margin-top: 5px;
+    font-family: "Syncopate";
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 33.31px;
+    text-align: left;
+}

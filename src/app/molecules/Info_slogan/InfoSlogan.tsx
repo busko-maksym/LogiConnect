@@ -14,8 +14,8 @@ export default function InfoSlogan() {
         <p>Швидко, Надійно, Доступно</p>
         <p>Пунктуальність та Безпека<br /> на Першому Місці</p>
         <Image src={Truck} className={styles.Truck} alt="Truck" />
+        </div>
         <Image src={Line} className={styles.Line} alt="Line" />
       </div>
-    </div>
   )
 }

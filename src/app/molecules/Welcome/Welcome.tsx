@@ -22,8 +22,8 @@ export default function Welcome() {
         variant='primary'
         size='large'
         ></Button>
-        <Image src={WelcomeLogo} alt="WelcomeLogo" />
         </div>
+        <Image src={WelcomeLogo} alt="WelcomeLogo" />
     </div>
   )
 }

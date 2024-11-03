@@ -1,0 +1,33 @@
+"use client"
+
+import React, { useState } from 'react';
+import Version1 from './versions/TruckDriver/TruckDriver'; 
+import Version2 from './versions/Logistician/Logistician'; 
+import Version3 from './versions/BusinessOwner/BuisnessOwner'; 
+
+const Register = () => {
+  const [selectedVersion, setSelectedVersion] = useState(null);
+
+  const handleVersionChange = (version) => {
+    setSelectedVersion(version);
+  };
+
+  return (
+    <div>
+      <h1>Виберіть версію сайту</h1>
+      <div>
+        <button onClick={() => handleVersionChange(1)}>Версія 1</button>
+        <button onClick={() => handleVersionChange(2)}>Версія 2</button>
+        <button onClick={() => handleVersionChange(3)}>Версія 3</button>
+      </div>
+
+      <div>
+        {selectedVersion === 1 && <Version1 />}
+        {selectedVersion === 2 && <Version2 />}
+        {selectedVersion === 3 && <Version3 />}
+      </div>
+    </div>
+  );
+};
+
+export default Register;

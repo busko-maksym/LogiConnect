@@ -26,10 +26,12 @@ const Card: React.FC<CardProps> = ({
                     <Image src={icon} alt={title} width={50} height={50} />
                 )}
             </div>
-            <h3 className={styles.title}>{title}</h3>
-            {description && <p className={styles.description}>{description}</p>}
+            <h3 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
+            {description && (
+                <p className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
+            )}
         </div>
     );
-};
+}
 
 export default Card;

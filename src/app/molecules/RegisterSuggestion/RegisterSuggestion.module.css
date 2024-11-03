@@ -8,13 +8,18 @@
 
 .container .Photo {
     position: absolute;
-    left: 386px;
+    top: 0;
+    width: 474px;
+    height: 458px;
+    margin-left: 386px;
+    margin-top: 97px;
 }
 
 .itemsContainer {
+    top: 0;
     position: absolute;
     left: 980px;
-    top: 50px;
+    margin-top: 153px;
     text-align: center;
 
 }
@@ -41,13 +46,31 @@
     font-weight: 400;
     font-size: 24px;
     line-height: 29.76px;
-    margin-bottom: 30px;
 }
 
-.itemsContainer .Arrow {
-    position: absolute;
-    display: block; /* Дозволяє зображенню займати місце як блочний елемент */
-    margin: 0 auto; 
-    left: 474px;
-    top: 275px;
+.itemsContainer button {
+    position: relative;
+    margin-top: 30px;
+}
+
+.container .Arrow {
+    position: absolute; 
+    left: 0;
+    top: 0;
+    margin-left: 1430px;
+    margin-top: 430px;
+}
+
+@media (max-width: 1440px) {
+    .container {
+        width: 1440px;
+    }
+    .container .Photo {
+        margin-left: 146px;
+    }
+    .itemsContainer {
+        left: 0;
+        margin-left: 730px;
+    }
+ 
 }

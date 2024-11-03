@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&family=Unbounded:wght@200..900&display=swap');
+
+.formContainer {
+    width: 100%;
+    height: 670px;
+    border-bottom: 2px dashed rgba(167, 167, 167, 1)
+}
+
+.logo {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    margin-left: 52px;
+    gap: 5px;
+}
+
+.logo h1{
+    font-family: "Unbounded";
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24.8px;
+    text-align: left;    
+}
+
+.logo h2 {
+    font-family: "Syncopate";
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 33.31px;
+    text-align: left;
+}
+
+.inputContainer {
+    position: absolute;
+    margin-top: 192px;
+    margin-left: 388px;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    margin-left: 1232px;
+    margin-top: 168px;
+}
+
+.text h3 {
+    margin-top: 18px;
+    width: 300px;
+    height: 30px;
+    font-family: "Unbounded";
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.76px;
+    text-align: center;
+}
+
+.text p {
+    margin-top: 18px;
+    width: 300px;
+    height: 80px;
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.5px;
+    text-align: center;
+}
+
+.inputRow {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.inputRow img {
+    margin-top: 15px;
+    width: 30px;
+    height: 20px;
+}
+
+.formContainer button{
+position: absolute;
+margin-top: 650px;
+margin-left: 388px;
+}

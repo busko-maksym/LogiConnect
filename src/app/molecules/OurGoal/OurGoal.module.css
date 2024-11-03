@@ -2,6 +2,8 @@
     position: absolute;
     top: 1457px;
     background-image: url("./img/Background.png");
+    background-size: cover; 
+    background-position: center;
     width: 1920px;
     height: 568px;   
 }
@@ -19,8 +21,9 @@
 
 .itemsContainer {
     display: flex;
+    margin-left: 240px;
     position: relative;
-    top: 140px;
+    margin-top: 100px;
     align-items: center;
     justify-content: center;
     gap: 100px;
@@ -29,7 +32,15 @@
     display: flex;
     flex-direction: row;
     width: 1440px;
-    margin: 0 auto;
     border-left: none;
     border-right: none;
+}
+
+@media (max-width: 1440px) {
+    .container {
+        width: 100%;
+    }
+    .itemsContainer {
+        margin-left: 0;
+    }
 }

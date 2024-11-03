@@ -1,7 +1,6 @@
 .container { 
     position: absolute;
-    left: 240px;
-    width: 1440px;
+    width: 1920px;
     height: 529px;
     top: 103px;
 }
@@ -15,6 +14,7 @@
 .container h2 {
     position: relative;
     top: 0px;
+    margin-top: 6px;
     line-height: 39.68px;
     font-family: "Unbounded";
     font-weight: 400;
@@ -24,7 +24,7 @@
 .container h3 {
     line-height: 24.8px;
     position: relative;
-    top: 19px;
+    margin-top: 19px;
     font-family: "Unbounded";
     font-weight: 400;
     font-size: 20px;
@@ -32,19 +32,27 @@
 }
 
 .container Button {
-    position: relative;
-    top: 50px;
+    position: absolute;
+    margin-top: 25px;
 }
 
 .itemContainer {
     position: absolute;
-    top: 100px;
-    left: 148px;
+    margin-top: 100px;
+    margin-left: 386px;
 }
 
-.itemContainer img {
+.container img {
     position: absolute;
-    left: 371px;
-    top: 118px;
-    max-width: 155%;
+    margin-left: 746px;
+    margin-top: 218px;
+}
+
+@media (max-width: 1440px) {
+    .itemContainer {
+        margin-left: 146px;
+    }
+    .container img {
+        margin-left: 506px;
+    }
 }

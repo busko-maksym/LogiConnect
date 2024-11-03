@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&family=Unbounded:wght@200..900&display=swap');
+
+
+.container {
+    overflow: hidden;
+      margin: 0;
+    width: 1920px;
+   height: 100vh; 
+    background-color: white;
+}
+
+.logo {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    margin-left: 52px;
+    gap: 5px;
+}
+
+.logo h1{
+    font-family: "Unbounded";
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24.8px;
+    text-align: left;    
+}
+
+.logo h2 {
+    font-family: "Syncopate";
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 33.31px;
+    text-align: left;
+}
+
+.loginContainer {
+    margin-top: 170px;
+    left: 753px;
+    position: absolute;
+    width: 414px;
+    height: 439px;
+    border: 5px dashed rgba(146, 107, 255, 1);
+    border-radius: 5px;
+}
+
+.loginContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 5px dashed rgba(146, 107, 255, 1); /* Ваш бордер */
+    border-radius: 5px; /* Також застосуйте закруглення */
+    z-index: -1; /* Помістіть за контентом */
+}
+
+
+.loginContainer h1 {
+    font-family: "Unbounded";
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.76px;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 35px;
+}
+
+.loginContainer p {
+    position: relative;
+    left: 47px;
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.5px;
+    margin-bottom: 58px;
+}
+
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.container a {
+    top: 350px;
+    position: absolute;
+    left: 245px;
+    font-family: "Montserrat";
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17.07px;
+    text-align: left;
+    color: rgba(167, 167, 167, 1);
+}
+
+.loginContainer button {
+    width: 130px;
+    height: 49px;
+    position: absolute;
+    top: 450px;
+    left: -5px;
+    font-family: "Montserrat";
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 21.94px;
+    text-align: center;
+
+}
+
+.container h3 {
+    position: absolute;
+    margin-left: 1815px;
+    margin-top: 35px;
+    font-family: Montserrat;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17.07px;
+    text-align: left;
+    color: #5C5C5C;
+}
+
+@media (max-width: 1440px) {
+    .loginContainer {
+        left: 0;
+        margin-left: 513px;
+        top: 0;
+        margin-top: 170px;
+    }
+
+    .loginContainer h1 {
+        font-size: 24px; /* Зменшення шрифту на менших екранах */
+    }
+
+    .loginContainer p {
+        font-size: 16px; /* Зменшення шрифту */
+    }
+
+    .container h3 {
+        font-size: 12px; /* Зменшення шрифту */
+        left: 0;
+        margin-left: 1335px;
+    }
+}

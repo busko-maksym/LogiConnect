@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&family=Unbounded:wght@200..900&display=swap');
+
+.container {
+    position: absolute;
+    width: 100%;
+    height: 463px;
+    border-top: 2px dashed rgba(167, 167, 167, 1); 
+    margin-top: 138px;
+}
+
+
+.About {
+    position: absolute;
+    margin-top: 83px;
+    margin-left: 402px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.About h3 {
+    font-family: "Unbounded";
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.76px;
+    text-align: center;
+    margin-top: 18px;
+}
+
+.About p {
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.5px;
+    text-align: center;
+    margin-top: 18px;
+}
+
+
+.Text {
+    font-family: "Unbounded";
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24.8px;
+    text-align: left;
+    position: absolute;
+    left: 0;
+    top: -24px;
+    background-color: white;
+    margin-left: 388px;
+    padding: 10px;
+}
+
+.direction {
+    margin-left: 878px;
+}
+
+.direction h2 {
+    position: absolute;
+    font-family: "Unbounded";
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.76px;
+    margin-top: 70px;
+    margin-left: 117px;
+}
+
+.direction p {
+    position: absolute;
+    font-family:"Montserrat";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.5px;
+    text-align: center;
+    margin-top: 113px;
+    margin-left: 65px;
+}
+
+.direction_choose h3 {
+    position: absolute;
+    font-family: "Montserrat";
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 18.29px;
+    text-align: center;
+    top: 0;
+    margin-top: 37px;
+}
+
+.direction_choose {
+    position: absolute;
+    margin-top: 201px;
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+}
+
+.direction_choose p {
+    position: relative;
+    font-family: "Montserrat";
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14.63px;
+    margin-top: 15px;
+    margin-left: 0;
+}

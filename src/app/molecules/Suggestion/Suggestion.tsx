@@ -18,7 +18,7 @@ export default function Suggestion() {
         <div className={styles.row}>
         <Card 
             icon={Futures}
-            title="Рейтинги та відгуки"
+            title="Рейтинги<br /> та відгуки"
             description="надавайте та отримуйте зворотний зв'язок, щоб обирати надійних партнерів."
         />
         <Card 

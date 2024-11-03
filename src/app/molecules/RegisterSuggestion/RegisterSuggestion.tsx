@@ -25,8 +25,8 @@ export default function RegisterSuggestion() {
         variant='primary'
         size='large'
         />
-        <Image src={Arrow} className={styles.Arrow} alt='Arrow'/>
       </div>
+      <Image src={Arrow} className={styles.Arrow} alt='Arrow'/>
     </div>
   )
 }

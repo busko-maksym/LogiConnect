@@ -17,9 +17,13 @@
     font-family: "Montserrat";
     font-weight: 700;
   }
+
+  .primary:hover {
+    background-color: rgba(29, 64, 153, 1);
+  }
   
   .secondary {
-    background-color: #6B37FF;
+    background-color: #926BFF;
     color: white;
     font-family: "Montserrat";
     font-weight: 700;
@@ -46,6 +50,12 @@
     height: 64px;
     font-size: 24px;
   }
+  
+  .midlarge {
+    width: 251px;
+    height: 49px;
+  }
+
     .disabled {
     background-color: #cccccc;
     cursor: not-allowed;

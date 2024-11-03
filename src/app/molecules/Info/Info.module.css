@@ -1,13 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&family=Unbounded:wght@200..900&display=swap');
 
-.container {
-    border-bottom: 0.5px solid rgba(73, 73, 73, 0.5)
-}
+
 
 .information button{
     position: relative;
     left: 388px;
-    margin-right: 20px;
+    margin-right: 30px;
     font-family: "Montserrat";
     font-weight: 500;
     font-size: 16px;
@@ -25,4 +23,14 @@
     line-height: 17.07px;
     color: rgba(73, 73, 73, 0.5);
     position: absolute;
+}
+
+@media (max-width: 1440px) {
+    .information button {
+        left: 146px;
+    }
+    .language {
+        left: 0;
+        margin-left: 1241px;
+    }
 }

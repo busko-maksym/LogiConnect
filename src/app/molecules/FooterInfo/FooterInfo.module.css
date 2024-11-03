@@ -7,36 +7,8 @@
     top: 3292px;
 }
 
-.contacts {
-    position: absolute;
-    left: 388px;
-    top: 35px;
-}
-
-.contacts h1 {
-    font-family: "Montserrat";
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 19.5px;
-    color: rgba(255, 255, 255, 1);
-    margin-bottom: 5px;
-}
-
-.contacts h2 {
-    font-family: "Montserrat";
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 17.07px;
-    color: rgba(255, 255, 255, 1);
-    margin-bottom: 4px;
-}
-
-.contacts p {
-    font-family: "Montserrat";
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 17.07px;
-    color: rgba(255, 255, 255, 0.7);
+.itemsContainer {
+    margin-left: 388px;
 }
 
 .Finder {
@@ -47,7 +19,7 @@
     color: white;
     position: absolute;
     top: 35px;
-    left: 583px;
+
     display: flex;
     flex-direction: column; 
     
@@ -67,7 +39,7 @@
 .otherInfo {
     position: absolute;
     top: 35px;
-    left: 771px;
+    margin-left: 188px;
     font-family: "Montserrat";
     font-weight: 500;
     font-size: 14px;
@@ -83,7 +55,6 @@
     flex-direction: row;
     gap: 20px;
     position: absolute;
-    left: 388px;
     top: 202px;
 }
 
@@ -101,4 +72,14 @@
     font-size: 12px;
     line-height: 14.63px;
     color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 1440px) {
+    .container {
+        width: 100%;
+
+    }
+    .itemsContainer {
+        margin-left: 146px;
+    }
 }

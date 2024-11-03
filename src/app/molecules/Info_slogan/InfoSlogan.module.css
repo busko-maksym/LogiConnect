@@ -1,17 +1,19 @@
 .container {
     position: absolute;
     width: 1920px;
-    height: 615px;
+    height: 692px;
     top: 2025px;
     background: linear-gradient(180deg, #373737 0%, #2D2D2D 100%);
 
 }
 
 .itemContainer {
+    left: 0;
     position: absolute;
-    left: 368px;
+    top: 0;
+    margin-left: 390px;
      text-align: center;
-     top: 100px;
+    margin-top: 147px;
 }
 
 .itemContainer .Line {
@@ -60,4 +62,22 @@
     top: 20px;
 }
 
+.Line {
+    position: relative;
+    margin-top: 534px;
+    margin-left: 660px;
+    z-index: 1
+}
+
+@media (max-width: 1440px) {
+    .container {
+        width: 1440px;
+    }
+    .itemContainer {
+        margin-left: 146px;
+    }
+    .Line {
+        margin-left: 410px;
+    }
+}
 

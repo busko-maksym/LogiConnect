@@ -2,7 +2,7 @@
     position: relative;
     width: 1920px;
     height: 825px;
-    top: 632px;
+    margin-top: 608px;
     background-color: rgba(45, 45, 45, 1);
 }
 
@@ -10,10 +10,10 @@
     background-color: rgba(255, 191, 96, 1);
     width: 1920px;
     height: 30px;
-    text-align: center;
 }
 
 .container_header h1 {
+    margin-left: 841px;
     font-family: "Unbounded";
     font-weight: 900;
     font-size: 22px;
@@ -27,7 +27,7 @@
     flex-direction: row;
     gap: 10px;
     position: absolute;
-    top: 65px;
+    margin-top: 84px;
 }
 
 .container {
@@ -41,7 +41,19 @@
     left: 438px;
     top: 55px;
     display: flex;
-    gap: 157px; /* Відстань між картками в рядку */
+    gap: 157px; 
     justify-content: center;
 }
 
+@media (max-width: 1440px) {
+    .container_header {
+        width: 1440px;
+    }
+    .container_header h1 {
+        margin-left: 601px;
+    }
+    .row {
+        left: 0;
+        margin-left: 196px;
+    }
+}
