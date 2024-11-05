@@ -1,11 +1,20 @@
-from settings import vacancies_db
+from settings import vacancies_db, filters_db, site_directory
 from bson import ObjectId
+from vacancies.telegram import bot
 
 
-def create_vacancies(parametrs, token):
+async def create_vacancies(parametrs, token):
     if token["acc_status"] == "buisness" or "company":
         parametrs.posted_by = token["user_id"]
         x = vacancies_db.insert_one(parametrs.__dict__)
+        users = get_users_vacancy(parametrs)
+        print(users)
+        for user in users:
+            print(user)
+            await bot.send_message(chat_id=user, text=f"it seems that you are ideal to apply:\n {parametrs.title}"
+                                                f"\n {site_directory}/vacancies/{x.inserted_id}\n"
+                                                f"{parametrs.description}\n"
+                                                f"{parametrs.location_from}-{parametrs.location_to}")
         return {"msg": "Registered successfully",
                 "id": str(x.inserted_id)}
     else:
@@ -64,3 +73,15 @@ def delete_vac(id, token):
         return {"msg": "Deleted successfully"}
     else:
         return {"msg": "This isn't your vacancy or this vacancy doesn`t exist"}
+
+
+def get_users_vacancy(vacancy):
+    query = {
+        "locations": {"$in": [vacancy.location_from]},
+        "minimum_wage": {"$lte": float(vacancy.salary_range)},
+        "urgency": {"$in": [vacancy.urgency]}
+    }
+
+    matching_users = filters_db.find(query)
+    ids = [i["telegram"] for i in matching_users]
+    return ids

@@ -1,8 +1,9 @@
-from settings import customer_db, redis_conn, site_directory
+from settings import customer_db, redis_conn, site_directory, filters_db
 from user_actions.utils import send_email, hashing, check_model
 from user_actions.jwt_op import jwt_en
 from user_actions.models import Mail
 import json
+from bson import ObjectId
 
 
 def register(credentials):
@@ -15,12 +16,11 @@ def register(credentials):
     rand = hashing(credentials.email)
 
     credentials_dict = dict(credentials)
-    del credentials_dict["password_confirmation"]
 
     credentials_json = json.dumps(credentials_dict)
     redis_conn.set(rand, credentials_json, ex=3600)
 
-    send_email(f"{site_directory}/request/{rand}", credentials.email)
+    send_email(f"{site_directory}/user/request/{rand}", credentials.email)
 
     return {"msg": "You successfully registered"}
 
@@ -45,7 +45,7 @@ class Requests:
         json_mail = json.loads(mail)
 
         result = check_model(json_mail, Mail)
-        if result: return {"msg": "It's wrong request"}
+        if result is None: return {"msg": "It's wrong request"}
 
         user = customer_db.insert_one(json.loads(mail))
         redis_conn.delete(self.email)
@@ -88,6 +88,16 @@ class Requests:
             })
         }
 
+    def telegram_req(self):
+        user = customer_db.find_one({"_id": ObjectId(self.email["user_id"])})
+        result = Requests(user["email"]).check_db()
+        if result: return {"msg": "You've already sent a request"}
+        hashed_user = hashing(user["email"])
+        credentials_json = json.dumps({"email": user["email"]})
+        redis_conn.set(hashed_user, credentials_json, ex=3600)
+        return {"msg": "You succesfully sent request, now go to link",
+                "link": f"t.me/LogiConnect_bot?start={hashed_user}"}
+
 
 def login(credentials):
     user = customer_db.find_one({"email": credentials.email})
@@ -99,3 +109,17 @@ def login(credentials):
                 }
     else:
         return {"msg": "Wrong credentials"}
+
+
+def preferences_create(credentials, token):
+    id_ = token["user_id"]
+    user = customer_db.find_one({"_id": ObjectId(id_)})
+    if filters_db.find_one({"user_id": id_}):
+        filters_db.delete_one({"user_id": id_})
+    if user["telegram"] is None:
+        return {"msg": "At first, you have to add telegram to your account"}
+    dict_credentials = credentials.__dict__
+    dict_credentials["user_id"] = token["user_id"]
+    dict_credentials["telegram"] = customer_db.find_one({"_id": ObjectId(id_)})["telegram"]
+    filters_db.insert_one(dict_credentials)
+    return {"msg": "Your preferences have been created"}

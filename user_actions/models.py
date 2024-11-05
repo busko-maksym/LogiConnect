@@ -1,6 +1,7 @@
 from pydantic import BaseModel, model_validator
 from typing import List, Optional
 from enum import Enum
+from vacancies.models import Urgency
 
 
 class UserBase(BaseModel):
@@ -31,7 +32,7 @@ class TruckDriverCreate(UserBase):
     has_international_permit: bool
 
 
-class BuisnessOwnerCreate(UserBase):
+class BusinessOwnerCreate(UserBase):
     acc_status: str = "buisness"
     company_name: str
     business_type: str
@@ -56,3 +57,10 @@ class MainUserData(BaseModel):
 
 class Mail(BaseModel):
     email: str
+
+
+class UserPreference(BaseModel):
+    user_id: str
+    minimum_wage: float
+    locations: list
+    urgency: List[Urgency]
