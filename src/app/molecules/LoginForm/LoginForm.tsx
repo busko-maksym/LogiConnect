@@ -6,6 +6,7 @@ import axios from 'axios';
 import styles from './LoginForm.module.css';
 import Input from '@/app/atoms/Input/Input';
 import Button from '@/app/atoms/Button/Button';
+import bcrypt from 'bcryptjs'
 
 const LoginForm = () => {
   const router = useRouter();
@@ -15,13 +16,14 @@ const LoginForm = () => {
   const [message, setMessage] = useState('');
 
   const handleLogin = async () => {
+    const hashedPassword = bcrypt.hashSync(password, 10);
     setError('');
     setMessage('');
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/user/login', {
         email: email,
-        password: password,
+        password: hashedPassword,
       });
 
       const token = response.data.cookie;
@@ -29,7 +31,6 @@ const LoginForm = () => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
       setMessage(response.data.msg);
-      router.push('/vacancy-registration');
       
     } catch (error) {
       if (error.response) {

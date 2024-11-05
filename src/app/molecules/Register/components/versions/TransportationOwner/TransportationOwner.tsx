@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './TransportationOwner.module.css';
 import Input from '@/app/atoms/Input/Input';
 import axios from 'axios';
-import bcrypt from 'bcryptjs';
 
 export default function TransportationOwner() {
     const [isChecked, setIsChecked] = useState(false);
@@ -21,14 +20,11 @@ export default function TransportationOwner() {
     };
 
     const handleSubmit = async () => {
-        // Хешуємо пароль перед відправкою на сервер
-        const hashedPassword = bcrypt.hashSync(password, 10);
-
         const requestData = {
             first_name: firstName,
             last_name: lastName,
             email: email,
-            password: hashedPassword, // Використовуємо хешований пароль
+            password: password,
             acc_status: "company",
             company_name: companyName,
             fleet_size: fleetSize,

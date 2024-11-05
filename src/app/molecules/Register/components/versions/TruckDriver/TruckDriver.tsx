@@ -46,8 +46,7 @@ export default function TruckDriver() {
         try {
             const response = await axios.post('http://127.0.0.1:8000/user/register/truck', requestData);
             console.log("Response:", response.data);
-            // Редирект на сторінку входу після успішної реєстрації
-            router.push('/login'); // Замість '/login' поставте шлях до вашої сторінки входу
+            router.push('/login'); 
         } catch (error) {
             console.error("Error during registration:", error);
         }

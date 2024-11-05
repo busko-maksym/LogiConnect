@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './BuisnessOwner.module.css';
 import Input from '@/app/atoms/Input/Input';
 import axios from 'axios';
-import bcrypt from 'bcryptjs';
 
 export default function BuisnessOwner() {
     const [isChecked, setIsChecked] = useState(false);
@@ -21,13 +20,11 @@ export default function BuisnessOwner() {
     };
 
     const handleSubmit = async () => {
-        const hashedPassword = bcrypt.hashSync(password, 10); 
-
         const requestData = {
             first_name: firstName,
             last_name: lastName,
             email: email,
-            password: hashedPassword, 
+            password: password, 
             acc_status: "buisness",
             company_name: companyName,
             business_type: businessType,
