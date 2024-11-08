@@ -7,10 +7,13 @@ import Photo from './img/Photo.png'
 import Arrow from './img/Arrow.png'
 import Idea from './img/Idea.png'
 import Button from '@/app/atoms/Button/Button'
+import { useRouter } from 'next/navigation'
+
 
 export default function RegisterSuggestion() {
+    const router = useRouter();
     const handleClick = () => {
-        alert('Button Clicked!');
+        router.push('/register')
       };
   return (
     <div className={styles.container}>

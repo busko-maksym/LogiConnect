@@ -32,7 +32,7 @@ export default function TruckDriver() {
             first_name: firstName,
             last_name: lastName,
             email: email,
-            password: hashedPassword,
+            password: password,
             acc_status: "driver",
             driver_license_type: licenseType,
             driver_license_number: licenseNumber,

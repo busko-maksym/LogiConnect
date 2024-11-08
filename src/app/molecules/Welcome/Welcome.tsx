@@ -5,10 +5,12 @@ import React from 'react'
 import WelcomeLogo from "./img/welcomePng.png"
 import styles from "./Welcome.module.css"
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 export default function Welcome() {
+    const router = useRouter();
     const handleClick = () => {
-        alert('Button Clicked!') 
+        router.push('/register')
     };
   return (
     <div className={styles.container}>

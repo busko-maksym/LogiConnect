@@ -53,6 +53,10 @@
     color: rgba(49, 107, 255, 1);
 }
 
+.small {
+    width: 270px;
+    height: 50px;
+}
 
 .medium {
     width: 320px;

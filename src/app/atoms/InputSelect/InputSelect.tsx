@@ -32,7 +32,7 @@ const InputSelect: React.FC<InputSelectProps> = ({ label, options, size = 'mediu
     return (
         <div className={`${styles.inputSelectContainer} ${styles[size]}`}>
             <select value={selectedOption} onChange={handleSelectChange} className={selectClassNames}>
-                <option value="">$</option>
+                <option value=""></option>
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}

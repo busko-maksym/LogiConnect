@@ -16,22 +16,27 @@ const LoginForm = () => {
   const [message, setMessage] = useState('');
 
   const handleLogin = async () => {
-    const hashedPassword = bcrypt.hashSync(password, 10);
     setError('');
     setMessage('');
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/user/login', {
         email: email,
-        password: hashedPassword,
+        password: password,
       });
 
-      const token = response.data.cookie;
-      localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      if (response.status === 200 && response.data.cookie) {
+        const token = response.data.cookie;
+        localStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  
+        setMessage(response.data.msg);
 
-      setMessage(response.data.msg);
-      
+        router.push('/vacancy-registration'); 
+      } else {
+        setError('Невірні дані для входу');
+      }
+  
     } catch (error) {
       if (error.response) {
         setError(error.response.data.msg || 'Помилка логіну');
@@ -42,7 +47,7 @@ const LoginForm = () => {
   };
 
   const handleForgotPassword = () => {
-    router.push('/password-reset'); // Зміна шляху на вашу сторінку скидання пароля
+    router.push('/password-reset'); 
   };
 
   return (

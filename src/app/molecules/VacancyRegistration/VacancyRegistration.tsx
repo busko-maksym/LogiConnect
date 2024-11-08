@@ -13,18 +13,20 @@ import axios from 'axios';
 export default function VacancyRegistration() {
     const [formData, setFormData] = useState({
         title: '',
+        description: '',
         location_from: '',
         location_to: '',
         salary_range: '',
-        description: '',
-        currency: '',
-        requirements: [''], 
+        posted_by: '',
+        created_at: new Date().toISOString(),
+        requirements: [''],
         additional_info: '',
-        money_per_hour: 0,
-        posted_by: '', 
+        currency: '',
+        urgency: '',
     });
 
     const options = [
+        { value: '$', label: '$' },
         { value: '€', label: '€' },
         { value: '₴', label: '₴' },
     ];
@@ -56,10 +58,10 @@ export default function VacancyRegistration() {
 
     const handleSubmit = async () => {
         try {
-            const token = localStorage.getItem('token'); 
+            const token = localStorage.getItem('token');
             const response = await axios.post('http://127.0.0.1:8000/vacancie/create', formData, {
                 headers: {
-                    'Authorization': `Bearer ${token}`, 
+                    'Authorization': `Bearer ${token}`,
                 },
             });
             alert(response.data.msg);
@@ -76,75 +78,79 @@ export default function VacancyRegistration() {
                 <h2>LogiConnect</h2>
             </div>
             <div className={styles.inputContainer}>
-                <Input 
-                    size='large' 
-                    label='Назва вакансії' 
-                    placeholder='Назва вакансії' 
-                    name="title" 
-                    value={formData.title} 
-                    onChange={handleChange} 
-                />
-                <div className={styles.inputRow}>
-                    <Input 
-                        size='medium' 
-                        label='Локація звідки?' 
-                        placeholder='Локація звідки?' 
-                        name="location_from" 
-                        value={formData.location_from} 
-                        onChange={handleChange} 
+                <div className={styles.inputGroup}> {/* Новий контейнер */}
+                    <Input
+                        size='large'
+                        label='Назва вакансії'
+                        placeholder='Назва вакансії'
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
                     />
-                    <Image src={Arrow} alt="Arrow" />
-                    <Input 
-                        size='medium' 
-                        label='Локація до куди?' 
-                        placeholder='Локація до куди?' 
-                        name="location_to" 
-                        value={formData.location_to} 
-                        onChange={handleChange} 
+                    <div className={styles.inputRow}>
+                        <Input
+                            size='medium'
+                            label='Локація звідки?'
+                            placeholder='Локація звідки?'
+                            name="location_from"
+                            value={formData.location_from}
+                            onChange={handleChange}
+                        />
+                        <Image src={Arrow} alt="Arrow" />
+                        <Input
+                            size='medium'
+                            label='Локація до куди?'
+                            placeholder='Локація до куди?'
+                            name="location_to"
+                            value={formData.location_to}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className={styles.inputRow}>
+                        <Input
+                            size='small'
+                            label='≈ Зарплата'
+                            placeholder='≈ Зарплата'
+                            name="salary_range"
+                            value={formData.salary_range}
+                            onChange={handleChange}
+                        />
+                        <InputSelect
+                            size="medium"
+                            label="Вибрати валюту"
+                            options={options}
+                            onChange={handleSelectChange}
+                        />
+                    </div>
+                    <div className={styles.inputRow}>
+                        <Input
+                            size='medium'
+                            label='Терміновість'
+                            placeholder='Терміновість'
+                            name="urgency"
+                            value={formData.urgency}
+                            onChange={handleChange}
+                        />
+                        {formData.requirements.map((req, index) => (
+                            <Input
+                                key={index}
+                                size='medium'
+                                label={`Вимога`}
+                                placeholder='Вимога'
+                                value={req}
+                                onChange={(e) => handleRequirementsChange(e, index)}
+                            />
+                        ))}
+                    </div>
+                    <Input
+                        size='large'
+                        label='Опис вакансії'
+                        placeholder='Опис вакансії'
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
                     />
                 </div>
-                <div className={styles.inputRow}>
-                    <Input 
-                        size='medium' 
-                        label='≈ Зарплата' 
-                        placeholder='≈ Зарплата' 
-                        name="salary_range" 
-                        value={formData.salary_range} 
-                        onChange={handleChange} 
-                    />
-                    <InputSelect 
-                        size="medium" 
-                        label="Вибрати валюту" 
-                        options={options} 
-                        onChange={handleSelectChange} 
-                    />
-                </div>
-                <Input 
-                    size='large' 
-                    label='Опис вакансії' 
-                    placeholder='Опис вакансії' 
-                    name="description" 
-                    value={formData.description} 
-                    onChange={handleChange} 
-                />
-                {formData.requirements.map((req, index) => (
-                    <Input 
-                        key={index}
-                        size='medium' 
-                        label={`Вимога`} 
-                        placeholder='Вимога' 
-                        value={req} 
-                        onChange={(e) => handleRequirementsChange(e, index)} 
-                    />
-                ))}
-                <Input 
-                    size='large' 
-                    label='Додаткова інформація' 
-                    placeholder='Додаткова інформація' 
-                    name="additional_info" 
-                    value={formData.additional_info} 
-                    onChange={handleChange} 
-                />
             </div>
             <div className={styles.text}>
                 <Image src={Document} alt="Document" />

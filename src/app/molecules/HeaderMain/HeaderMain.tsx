@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import styles from './HeaderMain.module.css';
 import Button from '@/app/atoms/Button/Button';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -23,19 +25,23 @@ export default function Header() {
     };
   }, []);
 
-  const handleClick = () => {
-    alert('Button Clicked!');
-  };
+  const handleLoginClick = () => {
+    router.push('/login')
+  }
+
+  const handleRegisterClick = () => {
+    router.push('/register')
+ };
 
   return (
     <div className={`${styles.container} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.container_items}>
         <h1>LogiConnect</h1>
         <div className={styles.authVariant}>
-          <h2>Я вже знайомий</h2>
+          <button onClick={handleLoginClick}>Я вже знайомий</button>
           <Button
             label="Почати"
-            onClick={handleClick}
+            onClick={handleRegisterClick}
             variant='primary'
             size='medium'
           />
