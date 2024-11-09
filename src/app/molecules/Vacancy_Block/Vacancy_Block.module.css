@@ -1,0 +1,78 @@
+/* Apply this to each vacancy card to space them out */
+.vacancy {
+    position: relative; /* Changed from absolute to relative */
+    margin-bottom: 20px; /* Space between cards */
+    padding: 20px;
+    width: 856px;
+    height: 250px;
+    margin-left: 388px;
+    border-radius: 5px;
+    border: 1.5px solid rgba(167, 167, 167, 1);
+    background-color: #fff; /* Optional: a background to distinguish each card */   
+    top: 311px;
+}
+
+/* Title styling */
+.vacancy h2 {
+    font-family: "Montserrat";
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24.38px;
+    text-align: left;
+    margin-top: 26px;
+    margin-left: 30px;
+}
+
+.vacancy img {
+    width: 24px;
+    height: 10px;
+    margin-top: 4px;
+}
+
+/* Route styling */
+.Road {
+    position: absolute;
+    top: 0;
+    
+    font-family: "Montserrat";
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 17.07px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    margin-left: 670px;
+    margin-top: 26px;
+    left: 0;
+    gap: 8.5px;
+    white-space: nowrap;
+}
+
+/* Description styling */
+.vacancy h4 {
+    position: absolute;
+    margin-top: 85px;
+    width: 796px;
+    margin-left: 30px;
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.5px;
+    text-align: left;
+    color: rgba(167, 167, 167, 1);
+    top: 0;
+}
+
+/* Salary styling */
+.vacancy h5 {
+    color: rgba(0, 120, 72, 1);
+    font-family: "Montserrat";
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 25.6px;
+    text-align: left;
+    margin-top: 193px;
+    margin-left: 30px;
+    position: absolute;
+    top: 0;
+}

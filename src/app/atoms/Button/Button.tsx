@@ -4,7 +4,7 @@ interface ButtonProps {
     label: string;
     onClick: () => void;
     variant?: 'primary' | 'secondary' | 'danger' | 'midlarge';
-    size?: 'small' | 'medium' | 'large';
+    size?: 'small' | 'medium' | 'large' | 'largemid' | 'ZaebavAndriy';
     disabled?: boolean;
 }
 

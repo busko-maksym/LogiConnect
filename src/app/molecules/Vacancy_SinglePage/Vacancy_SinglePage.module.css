@@ -1,0 +1,92 @@
+.container {
+    max-height: 1549px;
+    width: 856px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-top: 113px;
+    margin-left: 388px;
+    border: 1.5px solid rgba(73, 73, 73, 0.5);
+    padding-bottom: 15px;
+}
+
+.container h1 {
+    font-family: "Montserrat";
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 29.26px;
+    text-align: left;
+    margin-top: 53px;
+    margin-left: 40px;
+}
+
+.Road {
+    font-family: "Montserrat";
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 17.07px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    margin-top: 26px;
+    left: 0;
+    gap: 8.5px;
+    white-space: nowrap;
+    margin-left: 40px;
+}
+
+.container h2 {
+    color: rgba(0, 120, 72, 1);
+    font-family: "Montserrat";
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 25.6px;
+    text-align: left;
+    margin-top: 15px;
+    margin-left: 40px;
+}
+
+.container p {
+    width: 776px;
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19.5px;
+    text-align: left;
+    margin-left: 40px;
+    margin-top: 92px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.container h4 {
+    position: relative;
+    top: 0;
+    margin-top: 74px;
+    margin-left: 40px;
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+    text-align: left;
+}
+
+.container h5 {
+    position: relative;
+    top: 0;
+    margin-top: 33px;
+    margin-left: 40px;
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+    text-align: left;
+    color: rgba(167, 167, 167, 1);
+
+}
+
+.container button {
+    margin-top: 32px;
+    margin-left: 40px;
+}

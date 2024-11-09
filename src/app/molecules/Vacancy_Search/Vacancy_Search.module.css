@@ -1,4 +1,29 @@
 .container {
     width: 856px;
     height: 206px;
+    margin-top: 168px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-left: 388px;
+}
+
+.inputForm {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.container h3 {
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.5px;
+    text-align: left;
+    margin-left: 102px;
+}
+
+.container img {
+    margin-left: 256.5px;
+    margin-top: 35.5px;
 }
