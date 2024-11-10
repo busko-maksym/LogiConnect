@@ -1,4 +1,5 @@
 // app/vacancies/VacancyList.tsx
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,6 +7,7 @@ import axios from 'axios';
 import styles from './Vacancy_Block.module.css';
 import Image from 'next/image';
 import Arrow from './img/Arrow 8.png';
+import Link from 'next/link';
 
 type Vacancy = {
   _id: string;
@@ -15,7 +17,6 @@ type Vacancy = {
   location_to: string;
   salary_range: string;
   currency: string;
-  urgency: string;
 };
 
 const VacancyList = () => {
@@ -46,7 +47,7 @@ const VacancyList = () => {
       {error && <p className={styles.error}>{error}</p>}
 
       {vacancies.map((vacancy) => (
-        <a href={`/vacancies/${vacancy._id}`} key={vacancy._id} className={styles.vacancyLink}>
+        <Link key={vacancy._id} href={`/vacancies?id=${vacancy._id}`} className={styles.vacancyLink}>
           <div className={styles.vacancy}>
             <h2>{vacancy.title}</h2>
             <div className={styles.Road}>
@@ -59,7 +60,7 @@ const VacancyList = () => {
               {vacancy.salary_range ? `${vacancy.salary_range} ${vacancy.currency || ''}` : 'Зарплата не вказана'}
             </h5>
           </div>
-        </a>
+        </Link>
       ))}
     </div>
   );
