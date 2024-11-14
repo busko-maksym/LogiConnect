@@ -26,6 +26,8 @@
     text-align: left;
     margin-top: 26px;
     margin-left: 30px;
+    position: absolute;
+    top: 0;
 }
 
 .vacancy img {

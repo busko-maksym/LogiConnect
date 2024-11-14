@@ -45,6 +45,44 @@ const VacancySinglePage = () => {
     }
   }, [id]);
 
+  const handleCreateChat = async () => {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+  
+    try {
+      // Отримання ID користувача, який опублікував вакансію
+      const secondUserId = vacancy?.posted_by;
+      
+      if (!secondUserId) {
+        setError('Немає ідентифікатора користувача для створення чату');
+        return;
+      }
+  
+      // Відправка POST-запиту для створення чату
+      const response = await axios.post(
+        `http://127.0.0.1:8000/chat/create?second_user=${secondUserId}`,
+        {}, // Пусте тіло запиту
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: 'application/json',
+          },
+        }
+      );
+  
+      // Перенаправлення користувача на сторінку створеного чату
+      const chatId = response.data.chat_id;
+      router.push(`/chat/${chatId}`);
+    } catch (error) {
+      console.error(error);
+      setError('Помилка при створенні чату');
+    }
+  };
+
   const handleApply = async () => {
     const token = localStorage.getItem('token');
   
@@ -93,9 +131,17 @@ const VacancySinglePage = () => {
           size="ZaebavAndriy"
           onClick={handleApply}
         />
+        <Button 
+          label="Написати"
+          variant="primary"
+          size="ZaebavAndriy"
+          onClick={handleCreateChat}
+        />
       </div>
     </div>
   );
 };
+
+
 
 export default VacancySinglePage;
