@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends
-from user_actions.appLogic import register, login, Requests, preferences_create
+from user_actions.appLogic import (register, login, Requests, preferences_create,
+                                   add_car)
 from user_actions.models import (TruckDriverCreate, BusinessOwnerCreate,
-                                 TransportCompanyOwnerCreate, MainUserData, UserPreference)
+                                 TransportCompanyOwnerCreate, MainUserData, UserPreference,
+                                 CarAdd)
 from typing import Any
 from user_actions.jwt_op import verify_token
 
@@ -13,8 +15,8 @@ async def user_reg(user: TruckDriverCreate):
     return register(user)
 
 
-@router.post("/register/buisness")
-async def buisness_reg(user: BusinessOwnerCreate):
+@router.post("/register/business")
+async def business_reg(user: BusinessOwnerCreate):
     return register(user)
 
 
@@ -59,3 +61,6 @@ async def preferences(preferences_data: UserPreference, token: dict = Depends(ve
     return preferences_create(preferences_data, token)
 
 
+@router.post("/car")
+async def car_connect(car_data: CarAdd, token: dict = Depends(verify_token)):
+    return add_car(car_data, token)

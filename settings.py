@@ -16,11 +16,13 @@ user_db = client["Users_db"]
 chat_db = client["Chat"]
 vacancies = client["Vacancies"]
 
-customer_db = user_db["customer"]
 messages_db = chat_db["messages"]
 user_chat_db = chat_db["chats"]
 vacancies_db = vacancies["vacancies"]
+history_db = vacancies["history"]
 filters_db = user_db["filters"]
+customer_db = user_db["customer"]
+cars_db = user_db["cars"]
 
 SECRET_KEY = "8plb0vl6-HkU89IU_GMYBKZIfvVmMOIqrFzvtdA0a14"
 
@@ -28,7 +30,7 @@ SECRET_KEY = "8plb0vl6-HkU89IU_GMYBKZIfvVmMOIqrFzvtdA0a14"
 redis_conn = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 
-site_directory = "128.0.0.1:8000"
+site_directory = "127.0.0.1:8000"
 
 origins = [
     "http://localhost:3000",

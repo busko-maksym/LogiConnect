@@ -39,4 +39,4 @@ async def send_welcome(message: types.Message):
 
 @dp.message()
 async def handle_message(message: types.Message):
-    print(message)
+    await message.reply("this bot can only send you notifications, nothing else")

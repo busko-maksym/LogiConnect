@@ -1,4 +1,4 @@
-from settings import customer_db, redis_conn, site_directory, filters_db
+from settings import customer_db, redis_conn, site_directory, filters_db, cars_db
 from user_actions.utils import send_email, hashing, check_model
 from user_actions.jwt_op import jwt_en
 from user_actions.models import Mail
@@ -16,8 +16,10 @@ def register(credentials):
     rand = hashing(credentials.email)
 
     credentials_dict = dict(credentials)
+    credentials_dict["password"] = hashing(credentials_dict["password"])
 
     credentials_json = json.dumps(credentials_dict)
+
     redis_conn.set(rand, credentials_json, ex=3600)
 
     send_email(f"{site_directory}/user/request/{rand}", credentials.email)
@@ -49,7 +51,7 @@ class Requests:
 
         user = customer_db.insert_one(json.loads(mail))
         redis_conn.delete(self.email)
-        return {"msg": "account registrated",
+        return {"msg": "account registered",
                 "cookie": jwt_en({"user_id": str(user.inserted_id),
                                   "acc_status": json_mail["acc_status"]}
                                  )}
@@ -101,7 +103,7 @@ class Requests:
 
 def login(credentials):
     user = customer_db.find_one({"email": credentials.email})
-    if user["password"] == credentials.password:
+    if user["password"] == hashing(credentials.password):
         return {"msg": "You logged in",
                 "cookie": jwt_en({"user_id": str(user["_id"]),
                                   "acc_status": user["acc_status"]}
@@ -123,3 +125,15 @@ def preferences_create(credentials, token):
     dict_credentials["telegram"] = customer_db.find_one({"_id": ObjectId(id_)})["telegram"]
     filters_db.insert_one(dict_credentials)
     return {"msg": "Your preferences have been created"}
+
+
+def add_car(params, token):
+    car = cars_db.find({"user_id": token["user_id"]})
+    params["user_id"] = token["user_id"]
+    if car:
+        cars_db.delete_one({"user_id": token["user_id"]})
+        cars_db.insert_one(params)
+        return {"msg": "Your car have been added"}
+    else:
+        cars_db.insert_one(params)
+        return {"msg": "Your car have been added"}

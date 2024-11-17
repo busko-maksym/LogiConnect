@@ -33,7 +33,7 @@ class TruckDriverCreate(UserBase):
 
 
 class BusinessOwnerCreate(UserBase):
-    acc_status: str = "buisness"
+    acc_status: str = "business"
     company_name: str
     business_type: str
     company_size: int
@@ -64,3 +64,10 @@ class UserPreference(BaseModel):
     minimum_wage: float
     locations: list
     urgency: List[Urgency]
+
+
+class CarAdd(BaseModel):
+    waste: float
+    volume: int
+    weight: int
+    fridge: bool

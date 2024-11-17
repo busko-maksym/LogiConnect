@@ -26,4 +26,9 @@ def verify_token(token: HTTPBearer = Depends(HTTPBearer())):
     return decoded_token
 
 
+def decode_token(token):
+    decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    return decoded_token
+
+
 def jwt_en(payload): return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
