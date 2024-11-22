@@ -1,14 +1,56 @@
 .container {
     width: 450px;
-    height: 967px;
+    height: 100%;
     position: absolute;
     top: 0;
     margin-top: 113px;
-    border: 1px solid black;
+    z-index: 1;
+    border: 1px solid rgba(73, 73, 73, 0.5);
+    ;
     display: flex;
     justify-content: center;
+ 
 }
 
-.search { 
+.search {
     margin-top: 15px;
+    top: 0;
+    display: flex;
+    justify-content: center; /* Центрирование инпута */
+    position: absolute;
 }
+
+.chatList {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chatItem {
+    position: relative;
+    width: 450px;
+    height: 200px;
+    border-radius: 5px;
+    border-right: 1px solid rgba(73, 73, 73, 0.5);;
+    background-color: #fff;
+    top: 100px;
+    transition: border 0.3s;
+    margin-bottom: 10px;
+    cursor: pointer; /* Добавляем курсор для указания, что элемент кликабельный */
+    z-index: 1; /* Убедитесь, что элементы чатах находятся сверху */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.selected {
+    background-color: #f0f8ff; /* Цвет фона для выбранного чата */
+    border-color: #007bff; /* Меняем цвет рамки для выбранного чата */
+}
+
+.selectedChat {
+    background-color: rgba(167, 167, 167, 0.5); /* Синий бордер для выбранного чата */
+    border: none;
+  }

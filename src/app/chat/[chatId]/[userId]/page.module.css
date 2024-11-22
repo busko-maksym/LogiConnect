@@ -1,0 +1,117 @@
+
+/* Стиль контейнера чата */
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+  }
+  
+  /* Стиль боковой панели */
+  .chatContainer {
+  
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-left: 712px;
+    position: relative;
+  }
+  
+  .messageContainer {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  
+  /* Сообщения текущего пользователя */
+  .myMessage {
+    background-color: #007bff; /* Синий фон */
+    color: white; /* Белый цвет текста */
+    align-self: flex-end; /* Выравнивание по правому краю */
+  }
+  
+
+  .otherMessage {
+    background-color: #f1f1f1; /* Светло-серый фон */
+    color: black; /* Черный цвет текста */
+    align-self: flex-start; /* Выравнивание по левому краю */
+  }
+  
+
+  .name {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+
+
+  
+  /* Стиль для поля ввода и кнопки */
+  .inputChatContainer {
+    position: relative; /* Родительский элемент для корректного позиционирования */
+    display: flex;
+    margin-top: auto;
+  }
+
+  .inputChatContainer .Sent {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    margin-left:910px;
+    margin-top: 17.5px;
+  }
+  
+  .submitChat {
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .submitChat:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Стиль для текста сообщений */
+  .message {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  /* Стиль для ID клиента */
+  .clientId {
+    font-size: 12px;
+    color: gray;
+  }
+
+  .inputChatContainer .emojiPicker {
+  position: absolute; /* Позиционируем стикеры относительно родительского элемента */
+  bottom: 100%; /* Сдвигаем эмодзи вверх от поля ввода */
+  left: 0;
+  z-index: 10; /* Обеспечиваем, чтобы стикеры отображались поверх других элементов */
+  width: 100%;
+  background-color: white; /* Это может быть полезно для выделения области с стикерами */
+  border-radius: 8px; /* Закругления */
+}
+
+.chat {
+    display: flex;
+    flex-direction: column; /* Сообщения идут сверху вниз */
+    overflow-y: auto; /* Прокрутка по вертикали */
+    height: 100%; /* Делаем контейнер чат-сообщений растягиваемым по высоте */
+    margin-right: 332px;
+    margin-bottom: 84px;
+}
+
+
+
+
+
+
+  

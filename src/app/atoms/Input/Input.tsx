@@ -4,7 +4,7 @@ import styles from './Input.module.css';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     placeholder?: string; 
-    size?: 'small' | 'medium' | 'large' | 'big' | 'midlarge';
+    size?: 'small' | 'medium' | 'large' | 'big' | 'midlarge' | 'largebig';
 }
 
 const Input: React.FC<InputProps> = ({ label, placeholder, size = 'medium', ...props }) => {

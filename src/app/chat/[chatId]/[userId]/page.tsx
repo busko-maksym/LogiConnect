@@ -1,16 +1,23 @@
-// app/chat/[chatId]/[userId]/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';  // Використовуємо useParams з next/navigation
+import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
 import Input from '@/app/atoms/Input/Input';
+import Chat_SideBar from '@/app/molecules/Chat_SideBar/Chat_SideBar';
+import EmojiPicker from 'emoji-picker-react';
+import styles from './page.module.css';
+import Chat_header from '@/app/molecules/chat_header/Chat_header';
+import Image from 'next/image';
+import Sent from '../img/Sent.png';
 
 function Chat() {
-  const { chatId, userId } = useParams();  // Отримуємо параметри chatId та userId з URL
-  const [clientId, setClientId] = useState(userId || Math.floor(new Date().getTime() / 1000)); // ID за замовчуванням
+  const { chatId, userId } = useParams();
+  const [clientId, setClientId] = useState(userId || Math.floor(new Date().getTime() / 1000));
   const [websckt, setWebsckt] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<any[]>([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (clientId && chatId) {
@@ -22,8 +29,23 @@ function Chat() {
       };
 
       ws.onmessage = (e) => {
-        const incomingMessage = JSON.parse(e.data);
-        setMessages((prevMessages) => [...prevMessages, incomingMessage]);
+        try {
+          const incomingMessage = JSON.parse(e.data);
+          const messageData = incomingMessage.message ? JSON.parse(incomingMessage.message) : null;
+
+          if (messageData && messageData.message) {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                name: incomingMessage.name,
+                message: messageData.message,
+                clientId: messageData.clientId,
+              },
+            ]);
+          }
+        } catch (error) {
+          console.error('Error parsing message:', error);
+        }
       };
 
       setWebsckt(ws);
@@ -33,6 +55,12 @@ function Chat() {
       };
     }
   }, [clientId, chatId]);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const sendMessage = () => {
     if (websckt && message.trim()) {
@@ -46,40 +74,74 @@ function Chat() {
     }
   };
 
+  const onEmojiClick = (emoji: any) => {
+    setMessage(message + emoji.emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const getMessageStyles = (messageClientId: string, message: string) => {
+    const messageLength = message.length;
+    const dynamicWidth = Math.min(Math.max(messageLength * 7, 220), 500);
+
+    return messageClientId === clientId
+      ? {
+          backgroundColor: 'rgba(49, 107, 255, 1)',
+          color: 'white',
+          alignSelf: 'flex-end',
+          borderRadius: 20,
+          width: dynamicWidth,
+          minHeight: 56,
+          padding: '10px',
+          wordWrap: 'break-word',
+        }
+      : {
+          backgroundColor: '#f1f1f1',
+          color: 'black',
+          alignSelf: 'flex-start',
+          borderRadius: 20,
+          width: dynamicWidth,
+          minHeight: 56,
+          padding: '10px',
+          wordWrap: 'break-word',
+        };
+  };
+
   return (
-    <div className="container">
-      <h1>Chat Room: {chatId}</h1>
-      <h2>Client ID: {clientId}</h2>
-      <div className="chat-container">
-        <div className="chat">
-          {messages.map((value, index) => {
-            return value.clientId === clientId ? (
-              <div key={index} className="my-message-container">
-                <div className="my-message">
-                  <p className="client">Client ID: {value.name}</p>
-                  <p className="message">{value.message}</p>
-                </div>
-              </div>
-            ) : (
-              <div key={index} className="another-message-container">
-                <div className="another-message">
-                  <p className="client">Client ID: {value.clientId}</p>
-                  <p className="message">{value.message}</p>
-                </div>
-              </div>
-            );
-          })}
+    <div className={styles.container}>
+      <Chat_header />
+      <Chat_SideBar />
+      <div className={styles.chatContainer}>
+        <div ref={chatContainerRef} className={styles.chat}>
+          {messages.reverse().map((msg, index) => (
+            <div
+              key={index}
+              className={styles.messageContainer}
+              style={getMessageStyles(msg.clientId, msg.message)}
+            >
+              <p className={styles.name}>{msg.name}</p>
+              <p className={styles.message}>{msg.message}</p>
+            </div>
+          ))}
         </div>
-        <div className="input-chat-container">
+        <div className={styles.inputChatContainer}>
+          <button
+            className={styles.stickerButton}
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          >
+            😊
+          </button>
+          {showEmojiPicker && (
+            <div className={styles.emojiPicker}>
+              <EmojiPicker onEmojiClick={onEmojiClick} />
+            </div>
+          )}
           <Input
-            size='small'
+            size="largebig"
             placeholder="Chat message ..."
             onChange={(e) => setMessage(e.target.value)}
             value={message}
           />
-          <button className="submit-chat" onClick={sendMessage}>
-            Send
-          </button>
+          <Image className={styles.Sent} src={Sent} onClick={sendMessage} />
         </div>
       </div>
     </div>
