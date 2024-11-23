@@ -4,19 +4,21 @@
     display: flex;
     flex-direction: row;
     height: 100vh;
+   
+    
+    
   }
   
-  /* Стиль боковой панели */
   .chatContainer {
-  
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 20px;
     margin-left: 712px;
+    margin-top: 200px; /* Добавьте отступ сверху для учета высоты Chat_header */
     position: relative;
   }
-  
+
   .messageContainer {
     padding: 10px;
     margin: 5px;

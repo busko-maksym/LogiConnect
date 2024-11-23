@@ -9,6 +9,7 @@ type Chat = {
   participants: string[];
   last_message: string | null;
   updated_at: string;
+  name: string;
 };
 
 export default function Chat_SideBar() {
@@ -84,11 +85,10 @@ export default function Chat_SideBar() {
               className={`${styles.chatItem} ${selectedChatId === chat._id ? styles.selectedChat : ''}`}
               onClick={() => handleChatSelect(chat._id)}
             >
-              <h4>{chat._id}</h4>
               <div className={styles.chatDetails}>
-                <p><strong>Учасники:</strong> {chat.participants.join(', ')}</p>
-                <p><strong>Останнє повідомлення:</strong> {chat.last_message || 'Немає останнього повідомлення'}</p>
-                <p><strong>Оновлено:</strong> {new Date(chat.updated_at).toLocaleString()}</p>
+                <p>{chat.name}</p>
+                <p><strong>{chat.last_message || 'Немає останнього повідомлення'}</strong></p>
+                <p><strong>{new Date(chat.updated_at).toLocaleString()}</strong></p>
               </div>
             </div>
           ))

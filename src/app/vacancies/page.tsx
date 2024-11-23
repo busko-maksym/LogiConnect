@@ -35,7 +35,7 @@ const VacancySinglePage = () => {
 
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:8000/vacancies?id=${id}`)
+      axios.get(`http://localhost:8000/vacancies/{id}?_id=${id}`)
         .then((response) => {
           setVacancy(response.data);
         })
@@ -47,15 +47,15 @@ const VacancySinglePage = () => {
 
   const handleCreateChat = async () => {
     const token = localStorage.getItem('token');
-  
+    
     if (!token) {
       router.push('/login');
       return;
     }
-  
+    
     try {
-      // Отримання ID користувача, який опублікував вакансію
-      const secondUserId = vacancy?.posted_by;
+      // Перевірка, яке поле містить правильний ID користувача
+      const secondUserId = vacancy?.posted_by;  // або vacancy?.user_id, залежно від вашої структури
       
       if (!secondUserId) {
         setError('Немає ідентифікатора користувача для створення чату');
@@ -73,15 +73,20 @@ const VacancySinglePage = () => {
           },
         }
       );
-  
-      // Перенаправлення користувача на сторінку створеного чату
+    
+      // Перенаправлення користувача на сторінку чату з chat_id та jwt токеном
       const chatId = response.data.chat_id;
-      router.push(`/chat/${chatId}`);
+      if (!chatId) {
+        setError('Не вдалося отримати chatId');
+        return;
+      }
+      router.push(`/chat/${chatId}/${token}`);
     } catch (error) {
       console.error(error);
       setError('Помилка при створенні чату');
     }
   };
+  
 
   const handleApply = async () => {
     const token = localStorage.getItem('token');
@@ -93,7 +98,7 @@ const VacancySinglePage = () => {
   
     if (id) {
       try {
-        const response = await axios.post(`http://localhost:8000/vacancies/${id}/apply`, {}, {
+        const response = await axios.post(`http://localhost:8000/vacancies/{id}/apply?vacancies_id=${id}`, {}, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
