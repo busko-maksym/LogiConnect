@@ -95,6 +95,20 @@ def message_list(chat_id, user):
 
 
 def chats_list(token):
-    user_chat_db.find({"locations": {"$in": [token["user_id"]]}})
+    users = user_chat_db.find({"participants": {"$in": [token["user_id"]]}})
+    users_list = []
 
+    for user in users:
+        user['_id'] = str(user['_id'])
+        other_participants = [p for p in user['participants'] if p != token["user_id"]]
 
+        other_user_id = other_participants[0]
+        second_user = customer_db.find_one({"_id": ObjectId(other_user_id)})
+
+        if second_user:
+            user['name'] = str(second_user['first_name']+" "+second_user['last_name'])
+        else:
+            user['name'] = "Deleted account"
+        users_list.append(user)
+
+    return {"msg": users_list}

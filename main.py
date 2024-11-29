@@ -11,10 +11,6 @@ import sys
 from vacancies.telegram import main as telegram_main
 import uvicorn
 from multiprocessing import Process
-import datetime
-from user_actions.jwt_op import decode_token
-import json
-from chat_actions.appLogic import manager
 
 
 app = FastAPI()

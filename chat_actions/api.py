@@ -5,10 +5,11 @@ from chat_actions.appLogic import (create_chat, send_message,
 from chat_actions.models import Message
 from fastapi import WebSocket, WebSocketDisconnect
 import datetime
-import json
 from chat_actions.appLogic import manager
 from settings import customer_db, user_chat_db, messages_db
 from bson import ObjectId, timestamp
+import json
+import re
 
 router = APIRouter()
 
@@ -48,10 +49,16 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: str, client_id: str)
             data = await websocket.receive_text()
             now = datetime.datetime.now()
             current_time = now.strftime("%H:%M")
-            print(full_name)
             message = {"time": current_time, "name": full_name, "message": data}
+            print(full_name)
+            pattern_message = r'"message":"(.*?)"'
+            match_message = re.search(pattern_message, data)
+            if match_message:
+                message_text = match_message.group(1)
+            else:
+                message_text = "Message not found"
             await manager.broadcast(json.dumps(message), chat_id)
-            messages_db.insert_one({"sender_id": decoded_token["user_id"], "message": data,
+            messages_db.insert_one({"sender_id": decoded_token["user_id"], "message": message_text,
                                     "chat_id": chat_id, "timestamp": current_time,
                                     "full_name": user["first_name"]+" "+user["last_name"]})
 

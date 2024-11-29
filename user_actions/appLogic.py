@@ -1,5 +1,6 @@
 from settings import customer_db, redis_conn, site_directory, filters_db, cars_db
 from user_actions.utils import send_email, hashing, check_model
+from vacancies.appLogic import get_coordinates
 from user_actions.jwt_op import jwt_en
 from user_actions.models import Mail
 import json
@@ -116,24 +117,41 @@ def login(credentials):
 def preferences_create(credentials, token):
     id_ = token["user_id"]
     user = customer_db.find_one({"_id": ObjectId(id_)})
-    if filters_db.find_one({"user_id": id_}):
-        filters_db.delete_one({"user_id": id_})
+
     if user["telegram"] is None:
         return {"msg": "At first, you have to add telegram to your account"}
-    dict_credentials = credentials.__dict__
-    dict_credentials["user_id"] = token["user_id"]
-    dict_credentials["telegram"] = customer_db.find_one({"_id": ObjectId(id_)})["telegram"]
+
+    dict_credentials = dict(credentials)
+    dict_credentials["locations"] = [get_coordinates(loc) for loc in dict_credentials["locations"]]
+    dict_credentials["user_id"] = id_
+    dict_credentials["telegram"] = user["telegram"]
+    if filters_db.find_one({"user_id": id_}):
+        filters_db.update_one({"user_id": id_}, {"$set": dict_credentials})
+        return {"msg": "Your preferences have been created"}
     filters_db.insert_one(dict_credentials)
     return {"msg": "Your preferences have been created"}
 
 
 def add_car(params, token):
     car = cars_db.find({"user_id": token["user_id"]})
-    params["user_id"] = token["user_id"]
+    params_dict = params.__dict__
+    filter_obj = filters_db.find_one({"user_id": token["user_id"]})
+    params_dict["user_id"] = token["user_id"]
+
     if car:
         cars_db.delete_one({"user_id": token["user_id"]})
-        cars_db.insert_one(params)
-        return {"msg": "Your car have been added"}
+        cars_db.insert_one(params_dict)
+
     else:
-        cars_db.insert_one(params)
-        return {"msg": "Your car have been added"}
+        cars_db.insert_one(params_dict)
+
+    if filter_obj is None:
+        filters_db.insert_one({"volume": params_dict["volume"],
+                               "weight": params_dict["weight"],
+                               "user_id": token["user_id"]})
+    else:
+        filters_db.update_one({"user_id": token["user_id"]},
+                              {"$set": {"max_volume": params_dict["max_volume"],
+                                        "max_weight": params_dict["max_weight"]}})
+
+    return {"msg": "Your car have been added"}

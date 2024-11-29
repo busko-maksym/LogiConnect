@@ -17,8 +17,11 @@ class VacancyCreate(BaseModel):
     description: str = None
     location_from: str
     location_to: str
-    salary_range: Optional[str] = None
+    salary_range: Optional[float] = None
     user_id: str
+    distance: Optional[int] = None
+    first_coords: Optional[List[float]] = None
+    second_coords: Optional[List[float]] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     weight: Optional[int]
     volume: Optional[int]

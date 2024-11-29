@@ -1,25 +1,34 @@
 from sqlalchemy.exc import NoResultFound
-from vacancies.utils import get_coordinates
+from vacancies.utils import (get_coordinates, consolidate_by_points,
+                             generate_intermediate_points)
 from settings import (vacancies_db, filters_db, customer_db,
                       site_directory, history_db, redis_conn)
 from bson import ObjectId
 from vacancies.telegram import bot
 import requests
+from geopy.distance import geodesic
+import time
 
 
 async def create_vacancies(parametrs, token):
+    start = time.time()
     status = token["acc_status"]
     if status == "business" or status == "company":
         parametrs.user_id = token["user_id"]
-        parametrs.distance = get_distance_osrm(parametrs.location_from, parametrs.location_to)
+        parametrs.first_coords = get_coordinates(parametrs.location_from)
+        parametrs.second_coords = get_coordinates(parametrs.location_to)
+        parametrs.distance = await get_distance_osrm(parametrs.first_coords, parametrs.second_coords)
         x = vacancies_db.insert_one(parametrs.__dict__)
-        users = get_users_vacancy(parametrs.__dict__)
+        users = await get_users_vacancy(parametrs.__dict__)
         for user in users:
+            print(user["telegram"])
             await bot.send_message(chat_id=user["telegram"],
                                    text=f"it seems that you are ideal to apply:\n {parametrs.title}"
                                         f"\n {site_directory}/vacancies/{x.inserted_id}\n"
                                         f"{parametrs.description}\n"
-                                        f"{parametrs.location_from}-{parametrs.location_to}")
+                                        f"{parametrs.location_from}-->{parametrs.location_to}: {parametrs.distance}km")
+        end = time.time()
+        print(str(end-start))
         return {"msg": "Registered successfully",
                 "id": str(x.inserted_id)}
     else:
@@ -86,16 +95,36 @@ def delete_vac(id, token):
         return {"msg": "This isn't your vacancy or this vacancy doesn`t exist"}
 
 
-def get_users_vacancy(vacancy):
+async def get_users_vacancy(vacancy):
     query = {
-        "locations": {"$in": [vacancy["location_from"]]},
         "minimum_wage": {"$lte": float(vacancy["salary_range"])},
         "urgency": {"$in": [vacancy["urgency"]]}
     }
 
-    matching_users = filters_db.find(query)
-    users = [user for user in matching_users]
-    return users
+    matching_users = list(filters_db.find(query))
+    if not matching_users:
+        return []
+
+    result_users = []
+    vacancy_location = vacancy["first_coords"]
+
+    for user in matching_users:
+        user_locations = user.get("locations", [])
+        user_max_weight = user.get("max_weight", None)
+        user_max_volume = user.get("max_volume", None)
+
+        if user_locations and isinstance(user_locations, list):
+            for user_location in user_locations:
+                print(user_location, vacancy_location)
+                distance_km = geodesic(user_location, vacancy_location).kilometers
+                if distance_km <= 30.0:
+                    if user_max_weight is None or vacancy["weight"] <= user_max_weight:
+                        if user_max_volume is None or vacancy["volume"] <= user_max_volume:
+                            result_users.append(user)
+                    break
+
+    return result_users
+
 
 
 def accept_vacancy(id_, token, user_to_apply):
@@ -145,17 +174,13 @@ def potential_emloyees(vacancy, token):
         return {"msg": "No vacancy found or there is other "}
 
 
-def get_distance_osrm(start_city, end_city):
-    start_coords = get_coordinates(start_city)
-    end_coords = get_coordinates(end_city)
-
-    if start_coords is False or end_coords is False:
+async def get_distance_osrm(start_city, end_city):
+    if start_city is False or end_city is False:
         return {"msg": "An unexpected error occurred"}
 
-    if not start_coords or not end_coords:
+    if not start_city or not end_city:
         return "Could not find coordinates for one or both cities."
-
-    osrm_url = f"http://router.project-osrm.org/route/v1/driving/{start_coords[1]},{start_coords[0]};{end_coords[1]},{end_coords[0]}"
+    osrm_url = f"http://router.project-osrm.org/route/v1/driving/{start_city[1]},{start_city[0]};{end_city[1]},{end_city[0]}"
     response = requests.get(osrm_url, params={"overview": "false"})
     data = response.json()
 
@@ -166,3 +191,36 @@ def get_distance_osrm(start_city, end_city):
         return "Could not calculate the distance."
 
 
+def vacancies_radius(location, token):
+    user = customer_db.find_one({"_id": ObjectId(token["user_id"])})
+    if user is None:
+        return {"msg": "There is no user with this id in applicants"}
+    coords = get_coordinates(location)
+    vacancies = vacancies_db.find()
+    vacancies_list = []
+    for vacancy in vacancies:
+        vacancy_coords = vacancy.get("first_coords")
+        print(vacancy_coords)
+        distance_km = geodesic(list(vacancy_coords), coords).kilometers
+        if distance_km <= 30.0:
+            vacancy["_id"] = str(vacancy["_id"])
+            vacancies_list.append(vacancy)
+    return vacancies_list
+
+
+def consolidation(vacancy_id, token):
+    user = customer_db.find_one({"_id": ObjectId(token["user_id"])})
+    if user:
+        to_return = []
+        vacancy = vacancies_db.find_one({"_id": ObjectId(vacancy_id)})
+        vacancies = vacancies_db.find()
+        points = generate_intermediate_points(vacancy["first_coords"], vacancy["second_coords"])
+        for vac in vacancies:
+            consolid_results = consolidate_by_points(points, [vacancy["first_coords"], vacancy["second_coords"]],
+                                                     [vac["first_coords"], vac["second_coords"]])
+            if consolid_results:
+                vac["_id"] = str(vac["_id"])
+                to_return.append(vac)
+        return to_return
+    else:
+        return {"msg": "There is no user with this id in applicants"}

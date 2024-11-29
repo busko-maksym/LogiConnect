@@ -68,6 +68,6 @@ class UserPreference(BaseModel):
 
 class CarAdd(BaseModel):
     waste: float
-    volume: int
-    weight: int
+    max_volume: int
+    max_weight: int
     fridge: bool
