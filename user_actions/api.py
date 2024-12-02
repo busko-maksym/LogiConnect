@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from user_actions.appLogic import (register, login, Requests, preferences_create,
-                                   add_car)
+                                   add_car, user_pg)
 from user_actions.models import (TruckDriverCreate, BusinessOwnerCreate,
                                  TransportCompanyOwnerCreate, MainUserData, UserPreference,
                                  CarAdd)
@@ -64,3 +64,8 @@ async def preferences(preferences_data: UserPreference, token: dict = Depends(ve
 @router.post("/car")
 async def car_connect(car_data: CarAdd, token: dict = Depends(verify_token)):
     return add_car(car_data, token)
+
+
+@router.get("/{user_id}")
+async def user_page(user_id):
+    return user_pg(user_id)

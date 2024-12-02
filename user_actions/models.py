@@ -9,6 +9,8 @@ class UserBase(BaseModel):
     last_name: str
     email: str
     password: str
+    marks: Optional[list]
+    description: Optional[list]
 
 
 class DriverLicenseType(str, Enum):

@@ -155,3 +155,9 @@ def add_car(params, token):
                                         "max_weight": params_dict["max_weight"]}})
 
     return {"msg": "Your car have been added"}
+
+
+def user_pg(id_):
+    user = customer_db.find_one({"_id": ObjectId(id_)})
+    user["_id"] = str(user["_id"])
+    return user

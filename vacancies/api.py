@@ -1,10 +1,12 @@
-from fastapi import Request, Depends, FastAPI, Response, APIRouter
+from fastapi import Depends, APIRouter, Query
 from vacancies.models import VacancyCreate
 from user_actions.jwt_op import verify_token
 from vacancies.appLogic import (create_vacancies, apply_vacancy, find_vacancy,
                                 all_vacancies, get_applicants, delete_vac,
                                 accept_vacancy, close_vacancy, potential_emloyees,
-                                get_distance_osrm, vacancies_radius, consolidation)
+                                get_distance_osrm, vacancies_radius, consolidation,
+                                filter_vacancies)
+from typing import Optional, List
 
 
 router = APIRouter()
@@ -69,3 +71,24 @@ async def radius(start_radius: str, decoded_token: dict = Depends(verify_token))
 @router.post("/{vacancies_id}/consolidation")
 async def consolidate(vacancies_id: str, token: dict = Depends(verify_token)):
     return consolidation(vacancies_id, token)
+
+
+@router.get("/vacancies")
+async def get_vacancies(
+    min_salary: Optional[int] = None,
+    max_salary: Optional[int] = None,
+    max_distance: Optional[float] = 50,  # default 50 km
+    max_weight: Optional[float] = None,
+    max_volume: Optional[float] = None,
+    urgency: Optional[List[str]] = Query(None),
+    page: Optional[int] = 1,
+    token: dict = Depends(verify_token)
+):
+    return filter_vacancies({
+        "min_salary": min_salary,
+        "max_salary": max_salary,
+        "max_distance": max_distance,
+        "max_weight": max_weight,
+        "max_volume": max_volume,
+        "urgency": urgency
+    }, page)

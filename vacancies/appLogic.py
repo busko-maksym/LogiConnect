@@ -126,7 +126,6 @@ async def get_users_vacancy(vacancy):
     return result_users
 
 
-
 def accept_vacancy(id_, token, user_to_apply):
     vacancy = vacancies_db.find_one({"_id": ObjectId(id_)})
     if vacancy["user_id"] != token["user_id"]:
@@ -224,3 +223,16 @@ def consolidation(vacancy_id, token):
         return to_return
     else:
         return {"msg": "There is no user with this id in applicants"}
+
+
+def filter_vacancies(filters, page):
+    filters_query = {}
+    for k, v in filters.items():
+        if v:
+            filters_query[k] = v
+        else:
+            continue
+    results = [obj for obj in vacancies_db.find(filters).skip((page-1) * 10).limit(10)]
+    for obj in results:
+        obj["_id"] = str(obj["_id"])
+    return {"vacancies": results}
