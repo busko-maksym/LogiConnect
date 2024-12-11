@@ -71,4 +71,3 @@ def cosine_similarity(vector1, vector2):
         return 0
     return dot_product / (magnitude1 * magnitude2)
 
-

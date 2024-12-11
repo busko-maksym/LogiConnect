@@ -9,8 +9,7 @@ class UserBase(BaseModel):
     last_name: str
     email: str
     password: str
-    marks: Optional[list]
-    description: Optional[list]
+    marks: list = []
 
 
 class DriverLicenseType(str, Enum):
@@ -27,11 +26,11 @@ class DriverLicenseType(str, Enum):
 
 class TruckDriverCreate(UserBase):
     acc_status: str = "driver"
-    driver_license_type: DriverLicenseType
+    driver_license_type: List[DriverLicenseType] = []
     driver_license_number: str
-    experience_years: int
-    vehicle_types: List[str]
-    has_international_permit: bool
+    experience_years: int = None
+    vehicle_types: List[str] = []
+    has_international_permit: bool = False
 
 
 class BusinessOwnerCreate(UserBase):
@@ -63,6 +62,7 @@ class Mail(BaseModel):
 
 class UserPreference(BaseModel):
     user_id: str
+    max_distance: int
     minimum_wage: float
     locations: list
     urgency: List[Urgency]

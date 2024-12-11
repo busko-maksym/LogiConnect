@@ -8,27 +8,28 @@ from vacancies.telegram import bot
 import requests
 from geopy.distance import geodesic
 import time
+from user_actions.utils import send_email
 
 
 async def create_vacancies(parametrs, token):
-    start = time.time()
     status = token["acc_status"]
     if status == "business" or status == "company":
         parametrs.user_id = token["user_id"]
         parametrs.first_coords = get_coordinates(parametrs.location_from)
         parametrs.second_coords = get_coordinates(parametrs.location_to)
-        parametrs.distance = await get_distance_osrm(parametrs.first_coords, parametrs.second_coords)
+        distance = await get_distance_osrm(parametrs.first_coords, parametrs.second_coords)
+        parametrs.salary_per_km = round(parametrs.salary_range / distance, 3)
+        parametrs.distance = round(distance, 1)
         x = vacancies_db.insert_one(parametrs.__dict__)
         users = await get_users_vacancy(parametrs.__dict__)
         for user in users:
             print(user["telegram"])
             await bot.send_message(chat_id=user["telegram"],
                                    text=f"it seems that you are ideal to apply:\n {parametrs.title}"
-                                        f"\n {site_directory}/vacancies/{x.inserted_id}\n"
-                                        f"{parametrs.description}\n"
-                                        f"{parametrs.location_from}-->{parametrs.location_to}: {parametrs.distance}km")
-        end = time.time()
-        print(str(end-start))
+                                        f"\n{site_directory}/vacancies/{x.inserted_id}"
+                                        f"\n{parametrs.description}"
+                                        f"\n{parametrs.location_from}-->{parametrs.location_to}: {parametrs.distance}km📏"
+                                        f"\n{parametrs.salary_range}-->{parametrs.salary_range} {parametrs.currency}💸")
         return {"msg": "Registered successfully",
                 "id": str(x.inserted_id)}
     else:
@@ -38,6 +39,8 @@ async def create_vacancies(parametrs, token):
 def apply_vacancy(vacancy_id, token):
     vacancy = vacancies_db.find_one({"_id": ObjectId(vacancy_id)})
 
+    if token["user_id"] in vacancy["applicants"]:
+        return {"msg": "You`ve already applied to this vacancy"}
     if vacancy:
         applicants_list = vacancy.get("applicants", [])
         applicants_list.append(token["user_id"])
@@ -126,17 +129,32 @@ async def get_users_vacancy(vacancy):
     return result_users
 
 
-def accept_vacancy(id_, token, user_to_apply):
+async def accept_vacancy(id_, token, user_to_apply):
     vacancy = vacancies_db.find_one({"_id": ObjectId(id_)})
     if vacancy["user_id"] != token["user_id"]:
         return {"msg": "it is not your vacancy"}
+
     applicants_list = vacancy["applicants"]
+
     if user_to_apply in applicants_list:
+        applicant = customer_db.find_one({"_id": ObjectId(user_to_apply)})
         vacancy["last_id"] = str(vacancy["_id"])
         vacancy["vacancy_status"] = "In work"
         vacancy["completed_by"] = user_to_apply
-        history_db.insert_one(vacancy)
-        vacancies_db.delete_one({"_id": id_})
+        del vacancy["_id"]
+        vac = history_db.insert_one(vacancy)
+        try:
+            print(applicant)
+            await bot.send_message(chat_id=applicant["telegram"], text=f"You've been accepted to this vacancy: "
+                                                                 f"{site_directory}/vacancies/history/{vac.inserted_id}"
+                                                                 f"\n you can write to owner of vacancy:"
+                                                                 f"{site_directory}/chat/create/{vacancy['user_id']}")
+        except NameError:
+            send_email(f"You've been accepted to this vacancy: "
+                             f"{site_directory}/vacancies/history/{vac.inserted_id}"
+                             f"\n you can write to owner of vacancy:"
+                             f"{site_directory}/chat/create/{vacancy["user_id"]}", applicant["email"])
+        vacancies_db.delete_one({"_id": ObjectId(id_)})
         return {"msg": "You accepted user on vacancy"}
     else:
         return {"msg": "There is no user with this id in applicants"}
@@ -144,24 +162,26 @@ def accept_vacancy(id_, token, user_to_apply):
 
 def close_vacancy(id_, token, mark, description):
     vacancy = history_db.find_one({"last_id": id_})
+    user = customer_db.find_one({"_id": ObjectId(vacancy["completed_by"])})
     if vacancy["user_id"] != token["user_id"]:
         return {"msg": "it is not your vacancy"}
-    customer_db.update_one({"_id": ObjectId(vacancy["completed_by"])}, {"$addToSet": {"marks": mark}})
-    customer_db.update_one({"_id": ObjectId(vacancy["completed_by"])}, {"$addToSet": {"description": description}})
+    customer_db.update_one({"_id": ObjectId(vacancy["completed_by"])}, {"$addToSet": {"marks": {mark: description}}})
     history_db.update_one({"_id": ObjectId(id_)},
                           {
                               "$set": {
                                   "vacancy_status": "Completed",
                               }
                           })
+    send_email(f"Hello, your vacancy named {vacancy["name"]}", user["email"])
+
     return {"msg": "Vacancy closed"}
 
 
-def potential_emloyees(vacancy, token):
+async def potential_employees(vacancy, token):
     vacancy_obj = vacancies_db.find_one({"_id": ObjectId(vacancy)})
     try:
         if vacancy_obj["user_id"] == token["user_id"]:
-            users = get_users_vacancy(vacancy_obj)
+            users = await get_users_vacancy(vacancy_obj)
             user_list = []
             for user in users:
                 user["_id"] = str(user["_id"])

@@ -3,7 +3,7 @@ from vacancies.models import VacancyCreate
 from user_actions.jwt_op import verify_token
 from vacancies.appLogic import (create_vacancies, apply_vacancy, find_vacancy,
                                 all_vacancies, get_applicants, delete_vac,
-                                accept_vacancy, close_vacancy, potential_emloyees,
+                                accept_vacancy, close_vacancy, potential_employees,
                                 get_distance_osrm, vacancies_radius, consolidation,
                                 filter_vacancies)
 from typing import Optional, List
@@ -44,7 +44,7 @@ async def delete(_id: str, decoded_token: dict = Depends(verify_token)):
 
 @router.post("/{id}/applicants/accept")
 async def applicant_accept(_id: str, user_to_apply: str, decoded_token: dict = Depends(verify_token)):
-    return accept_vacancy(_id, decoded_token, user_to_apply)
+    return await accept_vacancy(_id, decoded_token, user_to_apply)
 
 
 @router.post("/{id}/close")
@@ -55,7 +55,7 @@ async def close(id_: str, description: str = None, mark: float = None,
 
 @router.post("/{id}/applicants/potential")
 async def potential(_id: str, decoded_token: dict = Depends(verify_token)):
-    return potential_emloyees(_id, decoded_token)
+    return await potential_employees(_id, decoded_token)
 
 
 @router.post("/distance")

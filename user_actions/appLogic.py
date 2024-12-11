@@ -45,8 +45,10 @@ class Requests:
 
     def accept_request(self):
         mail = redis_conn.get(self.email)
-        json_mail = json.loads(mail)
-
+        try:
+            json_mail = json.loads(mail)
+        except TypeError:
+            return {"msg": "Something went wrong... But it seems that link is expired"}
         result = check_model(json_mail, Mail)
         if result is None: return {"msg": "It's wrong request"}
 
@@ -66,12 +68,17 @@ class Requests:
             credentials_json = json.dumps({"email": self.email})
             redis_conn.set(hashed_user, credentials_json, ex=3600)
             send_email(f"{site_directory}/user/password/{hashed_user}", self.email)
+            return {"msg": "Please, check your email for a link"}
         else:
             return {"msg": "There is no account with this email"}
 
     def accept_password(self, password):
         mail = redis_conn.get(self.email)
-        json_mail = json.loads(mail)
+        try:
+            json_mail = json.loads(mail)
+        except TypeError:
+            return {"msg": "Something went wrong... But it seems that link is expired"}
+
         result = check_model(json_mail, Mail)
         if result is False:
             return {"msg": "It's wrong request"}
@@ -79,15 +86,15 @@ class Requests:
         # Use the key "email" directly instead of self.email
         filter_query = {"email": json_mail["email"]}
 
-        new_values = {"$set": {"password": password}}
-        result = customer_db.update_one(filter_query, new_values)
-
+        new_values = {"$set": {"password": hashing(password)}}
+        customer_db.update_one(filter_query, new_values)
+        user = customer_db.find_one(filter_query)
         redis_conn.delete(self.email)
         return {
             "msg": "Password has been accepted",
             "cookie": jwt_en({
-                "user_id": str(result.upserted_id),
-                "acc_status": customer_db.find_one(filter_query)["acc_status"]
+                "user_id": str(user["_id"]),
+                "acc_status": user["acc_status"]
             })
         }
 
@@ -117,6 +124,8 @@ def login(credentials):
 def preferences_create(credentials, token):
     id_ = token["user_id"]
     user = customer_db.find_one({"_id": ObjectId(id_)})
+    if token["acc_status"] != "driver":
+        return {"msg": "This feature is made for drivers only"}
 
     if user["telegram"] is None:
         return {"msg": "At first, you have to add telegram to your account"}
@@ -137,6 +146,10 @@ def add_car(params, token):
     params_dict = params.__dict__
     filter_obj = filters_db.find_one({"user_id": token["user_id"]})
     params_dict["user_id"] = token["user_id"]
+    query = {}
+    for k, v in params.items():
+        if v is not None:
+            query[k] = v
 
     if car:
         cars_db.delete_one({"user_id": token["user_id"]})

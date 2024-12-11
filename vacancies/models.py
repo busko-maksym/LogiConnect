@@ -18,6 +18,7 @@ class VacancyCreate(BaseModel):
     location_from: str
     location_to: str
     salary_range: Optional[float] = None
+    salary_per_km: Optional[float] = None
     user_id: str
     distance: Optional[int] = None
     first_coords: Optional[List[float]] = None
