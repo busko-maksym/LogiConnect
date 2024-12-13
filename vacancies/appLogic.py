@@ -84,7 +84,12 @@ def get_applicants(vacancy_id, token):
     vacancy = vacancies_db.find_one({"_id": ObjectId(vacancy_id)})
     if vacancy and vacancy["user_id"] == token["user_id"]:
         applicants_list = vacancy.get("applicants", [])
-        return {"list": applicants_list, "msg": "Found successfully"}
+        lst = []
+        for i in applicants_list:
+            user = customer_db.find_one({"_id": ObjectId(i)})
+            user["_id"] = str(user["_id"])
+            lst.append(user)
+        return {"list": lst, "msg": "Found successfully"}
     else:
         return {"msg": "You aren`t owner of vacancy or vacancy does not exist anymore"}
 
@@ -153,7 +158,7 @@ async def accept_vacancy(id_, token, user_to_apply):
             send_email(f"You've been accepted to this vacancy: "
                              f"{site_directory}/vacancies/history/{vac.inserted_id}"
                              f"\n you can write to owner of vacancy:"
-                             f"{site_directory}/chat/create/{vacancy["user_id"]}", applicant["email"])
+                             f"{site_directory}/chat/create/{vacancy['user_id']}", applicant["email"])
         vacancies_db.delete_one({"_id": ObjectId(id_)})
         return {"msg": "You accepted user on vacancy"}
     else:
