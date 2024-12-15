@@ -6,7 +6,6 @@ export default function Vacancy_Header() {
     <div className={styles.container}>
       <h3>UA | EN</h3>
       <div className={styles.logo}>
-        <h1>Вакансії</h1>
         <h2>LogiConnect</h2>
       </div>
     </div>

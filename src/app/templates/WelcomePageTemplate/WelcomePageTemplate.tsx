@@ -6,6 +6,7 @@ import OurGoal from '../../molecules/OurGoal/OurGoal'
 import InfoSlogan from '../../molecules/Info_slogan/InfoSlogan'
 import RegisterSuggestion from '../../molecules/RegisterSuggestion/RegisterSuggestion'
 import Footer from '../../organisms/Footer/Footer'
+import styles from './WelcomePageTemplate.module.css'
 
 export default function WelcomePageTemplate() {
   return (
@@ -16,7 +17,7 @@ export default function WelcomePageTemplate() {
       <OurGoal />
       <InfoSlogan />
       <RegisterSuggestion />
-      <Footer />
+      <Footer className={styles.footerLarge}/>
     </div>
   )
 }

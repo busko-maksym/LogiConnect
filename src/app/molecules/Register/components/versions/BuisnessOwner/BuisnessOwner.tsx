@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import styles from './BuisnessOwner.module.css';
 import Input from '@/app/atoms/Input/Input';
 import axios from 'axios';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { useRouter } from 'next/navigation';
+
 
 export default function BuisnessOwner() {
+    const router = useRouter();
     const [isChecked, setIsChecked] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -14,6 +19,10 @@ export default function BuisnessOwner() {
     const [companySize, setCompanySize] = useState(0);
     const [cargoTypes, setCargoTypes] = useState('');
     const [logisticsFrequency, setLogisticsFrequency] = useState('');
+
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
 
     const handleCheckBoxChange = () => {
         setIsChecked(!isChecked);
@@ -35,10 +44,20 @@ export default function BuisnessOwner() {
 
         try {
             const response = await axios.post('http://127.0.0.1:8000/user/register/buisness', requestData);
-            console.log("Response:", response.data);
+            setAlertMessage('Ви успішно зареєструвались!');
+            setAlertSeverity('success');
+            setAlertOpen(true);
+            router.push('/login');
         } catch (error) {
             console.error("Error during registration:", error);
+            setAlertMessage('Помилка реєстрації: ' + (error.response?.data.msg || 'Невідома помилка'));
+            setAlertSeverity('error');
+            setAlertOpen(true);
         }
+    };
+
+    const handleCloseAlert = () => {
+        setAlertOpen(false);
     };
 
     return (
@@ -143,6 +162,20 @@ export default function BuisnessOwner() {
                     </button>
                 </div>
             </div>
+             <Snackbar
+                open={alertOpen}
+                autoHideDuration={8000}
+                onClose={handleCloseAlert}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                >
+                <Alert
+                    onClose={handleCloseAlert}
+                    severity={alertSeverity}
+                    variant="outlined"
+                    >
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

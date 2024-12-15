@@ -120,7 +120,7 @@ const VacancySinglePage = () => {
   return (
     <div>
       <Vacancy_Header />
-      <Vacancy_SideBar />
+
       <div className={styles.container}>
         <h1>{vacancy.title}</h1>
         <h2>{vacancy.salary_range} {vacancy.currency}</h2>

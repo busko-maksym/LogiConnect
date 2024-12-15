@@ -1,10 +1,16 @@
-import FooterInfo from '@/app/molecules/FooterInfo/FooterInfo'
-import React from 'react'
+import FooterInfo from '@/app/molecules/FooterInfo/FooterInfo';
+import React from 'react';
 
-export default function Footer() {
+type FooterProps = {
+  className?: string; // Пропс для задания отступа сверху
+};
+
+const Footer: React.FC<FooterProps> = ({ className }) => {
   return (
-    <div>
+    <div className={className}>
       <FooterInfo />
     </div>
-  )
-}
+  );
+};
+
+export default Footer;

@@ -6,7 +6,6 @@ import axios from 'axios';
 import styles from './LoginForm.module.css';
 import Input from '@/app/atoms/Input/Input';
 import Button from '@/app/atoms/Button/Button';
-import bcrypt from 'bcryptjs'
 
 const LoginForm = () => {
   const router = useRouter();
@@ -57,7 +56,7 @@ const LoginForm = () => {
         <h1>Вхід</h1>
         <h2>LogiConnect</h2>
       </div>
-      <div className={styles.loginContainer}>
+      <div className={styles.loginContainer}>~
         <h1>Ласкаво просимо в LogiConnect!</h1>
         <p>Будь ласка, введіть дані для входу у <br /> ваш обліковий запис</p>
         <div className={styles.inputContainer}>

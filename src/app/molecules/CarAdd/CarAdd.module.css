@@ -1,0 +1,88 @@
+.inputContainer {
+    position: absolute;
+    margin-top: 168px;
+    margin-left: 388px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.checkbox {
+    color: #A7A7A7;
+    display: flex;
+    flex-direction: row;
+    gap: 19px;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    margin-left: 1232px;
+    margin-top: 168px;
+}
+
+.text h3 {
+    margin-top: 18px;
+    width: 300px;
+    height: 30px;
+    font-family: "Unbounded";
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.76px;
+    text-align: center;
+}
+
+.text p {
+    margin-top: 18px;
+    width: 300px;
+    height: 80px;
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.5px;
+    text-align: center;
+}
+
+
+.container  {
+    height: 590px;
+    border-bottom: 2px dashed rgba(167, 167, 167, 1)
+}
+
+.container button {
+  position: absolute;
+  margin-top: 565px;
+  margin-left: 388px;
+}
+
+.container input[type="checkbox"]:checked {
+    background-color: rgba(49, 107, 255, 1) ; /* Фон при виборі */
+    
+  }
+
+.container input[type="checkbox"]:checked::after {
+  content: ""; /* Пустий контент для псевдоелемента */
+  position: absolute;
+  top: 5px;
+  left: 126.2px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg); /* Поворот для створення "галочки" */
+  color: black;
+}
+
+.container input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(202, 202, 202, 1); /* Змінюємо колір бордера */
+  appearance: none; /* Вимикаємо стандартний вигляд чекбокса */
+  border-radius: 4px; /* Додаємо закруглені кути, якщо потрібно */
+}

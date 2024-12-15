@@ -1,0 +1,134 @@
+.container {
+    position: absolute;
+    margin-top: 411px;
+    margin-left: 532px;
+    left: 0;
+    top: 0;
+}
+
+.info {
+    width: 856px;
+    height: 69px;
+    border: solid 0.5px #49494980;
+}
+
+.info h1 {
+    font-family: "Unbounded";
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.76px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    position: absolute;
+    margin-left: 40px;
+    margin-top: 19.5px;
+}
+
+.aboutUserExperience {
+    position: absolute;
+    width: 428px;
+    height: 315px;
+    border: 0.5px solid #49494980;
+}
+
+.aboutUserExperience h3 {
+    font-family: "Montserrat";
+font-size: 16px;
+font-weight: 600;
+line-height: 19.5px;
+padding: 7px;
+text-underline-position: from-font;
+text-decoration-skip-ink: none;
+position: relative;
+left: 38px;
+top: 27px;
+}
+
+.blockContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.userTransport {
+    position: absolute;
+    width: 428px;
+    height: 315px;
+    border: 0.5px solid #49494980;
+    left: 0;
+    margin-left: 428px;
+}
+
+.userTransport h4 {
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    position: absolute;
+    left: 38px;
+    top: 27px;
+
+}
+
+.secondBlockContainer {
+    position: absolute;
+    left: 100px;
+    top: 0;
+}
+
+.transport {
+    position: absolute;
+    left: 0;
+    top: 96px;
+    left: -40px;
+}
+
+.transport .column {
+    position: relative;
+    margin-left: 100px;
+    width: 66px;
+    height: 25px;
+    border: 0.5px solid #49494980;
+
+}
+
+.column .block {
+    width: 36px;
+    height: 25px;
+    border-right: 0.5px solid #49494980;
+}
+
+.column .block h1 {
+    position: absolute;
+    font-family: "Montserrat";
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 14.63px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: black;
+    top: 5px;
+    left: 13px;
+}
+
+.column .check {
+    width: 30px;
+    height: 25px;
+
+    position: relative;
+    margin-left: 35px;
+}
+
+.check img {
+    position: absolute;
+    width: 12px;
+    height: 11px;
+    top: 7px;
+    left: 7.5px;
+}

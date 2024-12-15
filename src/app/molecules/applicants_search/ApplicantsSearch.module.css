@@ -1,0 +1,33 @@
+.container {
+    position: absolute;
+}
+
+.inputContainer {
+    margin-top: 226px;
+    margin-left: 485px;
+}
+
+.container input {
+    width: 778px;
+    height: 31px;
+}
+
+.container label {
+    position: absolute;
+    top: 15px;
+}
+
+.container button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 142px;
+    height: 30px;
+    margin-left: 1293px;
+    margin-top: 226px;
+    font-size: 14px;
+    line-height: 10px;
+}
+
+
+

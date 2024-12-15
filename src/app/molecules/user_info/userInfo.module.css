@@ -1,0 +1,106 @@
+.container {
+    /* оставляем как есть */
+  }
+  
+  .info {
+    position: absolute;
+    top: 0;
+    margin-top: 91px;
+    left: 0;
+    margin-left: 532px;
+    width: 856px;
+    height: 69px;
+    border-left: 0.5px rgba(73, 73, 73, 0.5) solid;
+    border-bottom: 0.5px rgba(73, 73, 73, 0.5) solid;
+    border-right: 0.5px rgba(73, 73, 73, 0.5) solid;
+  }
+  
+  .info h1 {
+    position: absolute;
+    left: 0;
+    font-family: Unbounded;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 29.76px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-top: 19.5px;
+    margin-left: 40px;
+  }
+  
+  .info button {
+    position: absolute;
+    left: 0;
+    margin-left: 746px;
+    margin-top: 25px;
+  }
+  
+  .userInfo {
+    width: 856px;
+    height: 251px; /* Делаем высоту авто, чтобы элементы нормально занимали место */
+    position: absolute;
+    top: 0px;
+    margin-top: 160px;
+    border-left: 0.5px rgba(73, 73, 73, 0.5) solid;
+    border-bottom: 0.5px rgba(73, 73, 73, 0.5) solid;
+    border-right: 0.5px rgba(73, 73, 73, 0.5) solid;
+    left: 0;
+    margin-left: 532px;
+    padding: 30px 40px; /* Добавляем отступы внутри блока */
+  }
+  
+  .userInfo .userRating h2 {
+    font-family: Unbounded;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.84px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-bottom: 30px; /* Добавляем отступ снизу для "Рейтинг" */
+  }
+  
+  .userInfo h3 {
+    font-family: Montserrat;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+    color: rgba(45, 45, 45, 1);
+    margin-top: 0; /* Сбрасываем отступы, чтобы они не смещались */
+  }
+  
+  .userInfo h3:nth-of-type(1) {
+    margin-top: 30px; /* Первый h3 - отступ сверху 30px */
+  }
+  
+  .userInfo h3:nth-of-type(2) {
+    margin-top: 25px; /* Второй h3 - отступ сверху 25px */
+  }
+  
+  .userInfo h3:nth-of-type(3) {
+    margin-top: 15px; /* Третий h3 - отступ сверху 15px */
+  }
+  
+  .row {
+    position: absolute;
+    top: 0;
+    display: flex; /* Flexbox для выравнивания */
+  flex-direction: column; /* Расположить элементы вертикально */
+  gap: 0px; /* Установить общий отступ между элементами */
+  margin-left: 313px; /* Сместить весь блок вправо */
+  margin-top: 95px; /* Сместить вниз */
+  font-family: Montserrat;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+     color: rgba(45, 45, 45, 1);
+  }
+
+  .row h4 {
+    margin-top: 15px;
+  }
+
+
+
+  

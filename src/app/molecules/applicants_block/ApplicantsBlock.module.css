@@ -1,0 +1,53 @@
+.container {
+    position: absolute;
+    margin-top: 422px;
+    margin-left: 485px;
+      display: flex;
+  flex-direction: column;
+  gap: 20px; /* Расстояние между блоками */
+}
+
+.header {
+    width: 950px;
+    height: 28px;
+    background: linear-gradient(97.93deg, #316BFF 0%, #0047FF 100%);
+
+}
+
+.block .button{
+    position: absolute;
+    margin-right: 12px;
+    left: 699px;
+    top: 35px;
+    display: flex;
+    gap: 12px;
+}
+
+
+
+.block {
+    position: relative;
+    width: 950px;
+    height: 113px;
+    border: 1.5px solid #A7A7A7;
+    border-radius: 5px;
+    font-family: "Montserrat";
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 18.29px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.block h1 {
+    left: 13px;
+    top: 35px;
+    position: absolute;
+}
+
+.block h2 {
+    left: 13px;
+    top: 62px;
+    position: absolute;
+}

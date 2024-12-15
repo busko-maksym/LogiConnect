@@ -1,20 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&family=Unbounded:wght@200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 .vacancy {
     position: relative; 
-    margin-bottom: 20px; 
     padding: 20px;
-    width: 856px;
-    height: 250px;
-    margin-left: 388px;
+    width: 1104px;
+    height: 157px;
+    
     border-radius: 5px;
-    border: 1.5px solid rgba(167, 167, 167, 1);
+    border: 0.5px solid rgba(202, 202, 202, 1);
     background-color: #fff;
-    top: 311px;
     transition: border 0.3s;
 }
 
 .vacancy:hover {
-    border: 1.5px solid rgba(49, 107, 255, 1);
+    border: 0.5px solid rgba(49, 107, 255, 1);
 }
 
 
@@ -39,7 +39,6 @@
 .Road {
     position: absolute;
     top: 0;
-    
     font-family: "Montserrat";
     font-size: 14px;
     font-weight: 600;
@@ -47,18 +46,35 @@
     text-align: left;
     display: flex;
     flex-direction: row;
-    margin-left: 670px;
+    margin-left: 20px;
     margin-top: 26px;
     left: 0;
     gap: 8.5px;
     white-space: nowrap;
 }
 
+.Road p {
+    position: absolute;
+    margin-top: 0px;
+    margin-left: 357px;
+    color: rgba(167, 167, 167, 1);
+    font-family: Montserrat;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19.5px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: rgba(0, 0, 0, 1);
+
+
+}
+
 .vacancy h4 {
     position: absolute;
-    margin-top: 85px;
+    margin-top: 20px;
     width: 796px;
-    margin-left: 30px;
+    margin-left: 533px;
     font-family: "Montserrat";
     font-size: 16px;
     font-weight: 500;
@@ -69,14 +85,67 @@
 }
 
 .vacancy h5 {
-    color: rgba(0, 120, 72, 1);
+    
+    width: 87px;
+    height: 22px;
+    background: linear-gradient(90deg, #00A764 0%, #00C073 100%);
     font-family: "Montserrat";
     font-size: 21px;
     font-weight: 600;
     line-height: 25.6px;
     text-align: left;
-    margin-top: 193px;
-    margin-left: 30px;
+    margin-top: 22px;
+    margin-left: 1006px;
+    left: 0;
     position: absolute;
     top: 0;
+    color: white;
+    clip-path: polygon(-0% 0%, 80% 0%, 90% 100%, 9% 100%);
+    padding-left: 9px; /* Зміщує текст всередині блоку */
+}
+
+.income {
+    position: absolute;
+    width: 1104px;
+    height: 27px;
+    width: 1104px;
+    margin-top: -3.5px;
+border-radius: 0px 0px 5px 5px;
+    background: linear-gradient(90deg, #D0DDFF 0%, #EEF3FF 100%);
+    border-right: 0.5px solid rgba(202, 202, 202, 1);
+    border-left: 0.5px solid rgba(202, 202, 202, 1);
+    border-bottom: 0.5px solid rgba(202, 202, 202, 1);
+
+}
+
+.income h6 {
+    color: rgba(101, 144, 255, 1);
+    margin-left: 914px;
+    margin-top: 6px;
+    font-family: "Montserrat";
+font-size: 12px;
+font-weight: 600;
+line-height: 14.63px;
+text-align: left;
+text-underline-position: from-font;
+text-decoration-skip-ink: none;
+
+}
+
+.vacancyLink {
+    margin-bottom: 37px; 
+    top: 144px;
+    display: inline-block;
+    position: relative;
+    width: 1104px;
+    height: 157px;
+    margin-left: 622px;
+}
+
+
+
+@media(max-width: 1440px) {
+    .vacancy {
+        margin-left: 146px;
+    }
 }

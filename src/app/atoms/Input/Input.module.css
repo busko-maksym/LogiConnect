@@ -53,8 +53,18 @@
     color: rgba(49, 107, 255, 1);
 }
 
+.verysmall {
+    width: 110px;
+    height: 50px;
+}
+
 .small {
     width: 270px;
+    height: 50px;
+}
+
+.smallmed {
+    width: 338px;
     height: 50px;
 }
 
@@ -70,6 +80,11 @@
 
 .midlarge {
     width: 418px;
+    height: 50px;
+}
+
+.DaNyBlyaAndriy {
+    width: 95px;
     height: 50px;
 }
 

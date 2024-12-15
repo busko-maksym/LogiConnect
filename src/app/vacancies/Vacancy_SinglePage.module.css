@@ -96,3 +96,9 @@
     height: 10px;
     margin-top: 4px;
 }
+
+@media(max-width: 1440px) {
+    .container {
+        margin-left: 146px;
+    }
+}

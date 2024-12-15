@@ -137,3 +137,22 @@
     background-color: rgba(255, 255, 255, 1);
 
 }
+
+
+@media(max-width: 1440px) {
+    .Text {
+        margin-left: 146px;
+    }
+
+    .container_third .row  {
+        margin-left: 146px;
+    }
+
+    .container_second .row  {
+        margin-left: 146px;
+    }
+
+    .container_fourth .confirm {
+        margin-left: 146px;
+    }
+}

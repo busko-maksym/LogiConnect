@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Syncopate:wght@400;700&family=Unbounded:wght@200..900&display=swap');
 
 .container {
-    width: 1600px;
-    height: 113px;
+    border-bottom: 1px solid rgba(202, 202, 202, 1);
+    width: 1920px;
+    height: 91px;
     background-color: white;
 }
 

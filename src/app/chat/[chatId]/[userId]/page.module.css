@@ -111,6 +111,15 @@
     margin-bottom: 84px;
 }
 
+@media(max-width: 1440px) {
+    .chatContainer {
+        margin-left: 495px;
+    }
+    .inputChatContainer {
+        left: -50px;
+    }
+}
+
 
 
 

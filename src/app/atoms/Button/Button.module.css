@@ -22,6 +22,16 @@
     background-color: rgba(29, 64, 153, 1);
   }
   
+  .write {
+    width: 70px;
+    height: 50px;
+  }
+
+  .accept {
+    width: 163px;
+    height: 50px;
+  }
+
   .secondary {
     background-color: #926BFF;
     color: white;
@@ -68,5 +78,10 @@
 
   .ZaebavAndriy {
     width: 200px;
+    height: 50px;
+  }
+
+  .sykaBlyatAndriyNahui {
+    width: 70px;
     height: 50px;
   }

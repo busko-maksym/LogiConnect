@@ -95,3 +95,17 @@ position: absolute;
 margin-top: 739px;
 margin-left: 388px;
 }
+
+@media(max-width: 1440px) {
+    .inputContainer {
+        margin-left: 146px;
+    } 
+
+    .text {
+        margin-left: 994px;
+    }
+
+    .formContainer button {
+        margin-left: 146px;
+    }
+}

@@ -6,7 +6,7 @@ import LinkedIn from './img/LinkedIn.png'
 
 export default function FooterInfo() {
   return (
-    <div className={styles.container}>
+    <div className={styles.container_footer}>
       <div className={styles.itemsContainer}>
         <div className={styles.Finder}>
           <h1>Де нас знайти:</h1>

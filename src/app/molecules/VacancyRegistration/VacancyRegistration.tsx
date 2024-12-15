@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react';
 import styles from './VacancyRegistration.module.css';
@@ -9,6 +9,8 @@ import Arrow from './img/Arrow.png';
 import Button from '@/app/atoms/Button/Button';
 import InputSelect from '@/app/atoms/InputSelect/InputSelect';
 import axios from 'axios';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function VacancyRegistration() {
     const [formData, setFormData] = useState({
@@ -25,11 +27,19 @@ export default function VacancyRegistration() {
         urgency: '',
     });
 
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+
     const options = [
         { value: '$', label: '$' },
         { value: '€', label: '€' },
         { value: '₴', label: '₴' },
     ];
+
+    const handleCloseAlert = () => {
+        setAlertOpen(false);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -64,10 +74,14 @@ export default function VacancyRegistration() {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            alert(response.data.msg);
+            setAlertMessage('Вакансія успішно створена!');
+            setAlertSeverity('success');
+            setAlertOpen(true);
         } catch (error) {
             console.error('Error creating vacancy:', error.response ? error.response.data : error.message);
-            alert('Error creating vacancy: ' + (error.response?.data.msg || 'Unknown error'));
+            setAlertMessage('Помилка створення вакансії: ' + (error.response?.data.msg || 'Невідома помилка'));
+            setAlertSeverity('error');
+            setAlertOpen(true);
         }
     };
 
@@ -78,7 +92,7 @@ export default function VacancyRegistration() {
                 <h2>LogiConnect</h2>
             </div>
             <div className={styles.inputContainer}>
-                <div className={styles.inputGroup}> {/* Новий контейнер */}
+                <div className={styles.inputGroup}> 
                     <Input
                         size='large'
                         label='Назва вакансії'
@@ -158,6 +172,21 @@ export default function VacancyRegistration() {
                 <p>Створіть свою вакансію для<br /> подальшої роботи. Вакансія<br /> відобразиться на головній сторінці<br /> вакансій</p>
             </div>
             <Button label='Створити вакансію' size='midlarge' onClick={handleSubmit} />
+
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={8000}
+                onClose={handleCloseAlert}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert
+                    onClose={handleCloseAlert}
+                    severity={alertSeverity}
+                    variant="outlined"
+                >
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

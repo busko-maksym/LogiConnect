@@ -10,18 +10,11 @@ export default function Vacancy_Search() {
     <div className={styles.container}>
       <div className={styles.inputForm}>
         <Input
-            size='large'
-            label='Пошук по назві'
-            placeholder='Пошук по назві'
-        />
-        <Button 
-            size='largemid'
-            variant='primary'
+            size='smallmed'
             label='Пошук'
+            placeholder='Пошук'
         />
         </div>
-        <h3><b>100 000+</b> актуальних вакансій від <b>30 000+</b> компаній</h3>
-        <Image src={Line} />
     </div>
   )
 }

@@ -5,11 +5,12 @@ import Input from '@/app/atoms/Input/Input';
 import axios from 'axios';
 import styles from './TruckDriver.module.css';
 import bcrypt from 'bcryptjs';
-import { useRouter } from 'next/navigation'; 
-
+import { useRouter } from 'next/navigation';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function TruckDriver() {
-    const router = useRouter(); 
+    const router = useRouter();
     const [isChecked, setIsChecked] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -21,18 +22,20 @@ export default function TruckDriver() {
     const [vehicleTypes, setVehicleTypes] = useState([]);
     const [hasPermit, setHasPermit] = useState(false);
 
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState<'success' | 'error'>('success');
+
     const handleCheckBoxChange = () => {
         setIsChecked(!isChecked);
     };
 
     const handleSubmit = async () => {
-        const hashedPassword = bcrypt.hashSync(password, 10);
-
         const requestData = {
             first_name: firstName,
             last_name: lastName,
             email: email,
-            password: password,
+            password: password, 
             acc_status: "driver",
             driver_license_type: licenseType,
             driver_license_number: licenseNumber,
@@ -41,15 +44,22 @@ export default function TruckDriver() {
             has_international_permit: hasPermit
         };
 
-        console.log("Request data:", requestData); 
-
         try {
             const response = await axios.post('http://127.0.0.1:8000/user/register/truck', requestData);
-            console.log("Response:", response.data);
-            router.push('/login'); 
+            setAlertMessage('Ви успішно зареєструвались!');
+            setAlertSeverity('success');
+            setAlertOpen(true);
+            router.push('/login');
         } catch (error) {
             console.error("Error during registration:", error);
+            setAlertMessage('Помилка реєстрації: ' + (error.response?.data.msg || 'Невідома помилка'));
+            setAlertSeverity('error');
+            setAlertOpen(true);
         }
+    };
+
+    const handleCloseAlert = () => {
+        setAlertOpen(false);
     };
 
     return (
@@ -158,6 +168,20 @@ export default function TruckDriver() {
                     </button>
                 </div>
             </div>
+            <Snackbar
+                open={alertOpen}
+                autoHideDuration={8000}
+                onClose={handleCloseAlert}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            >
+                <Alert
+                    onClose={handleCloseAlert}
+                    severity={alertSeverity}
+                    variant="outlined"
+                >
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
