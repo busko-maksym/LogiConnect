@@ -26,7 +26,6 @@ cars_db = user_db["cars"]
 
 SECRET_KEY = "8plb0vl6-HkU89IU_GMYBKZIfvVmMOIqrFzvtdA0a14"
 
-
 redis_conn = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 
@@ -36,3 +35,6 @@ origins = [
     "http://localhost:3000",
     "localhost:3000"
 ]
+
+fuel_95 = 58
+diesel = 58

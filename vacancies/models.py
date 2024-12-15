@@ -30,5 +30,6 @@ class VacancyCreate(BaseModel):
     additional_info: Optional[str] = None
     currency: Optional[str] = None
     urgency: Optional[Urgency] = None
+    applicants: Optional[List[str]] = []
 
 

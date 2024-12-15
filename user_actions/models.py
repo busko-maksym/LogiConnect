@@ -9,7 +9,7 @@ class UserBase(BaseModel):
     last_name: str
     email: str
     password: str
-    marks: list = []
+    marks: dict = {}
 
 
 class DriverLicenseType(str, Enum):

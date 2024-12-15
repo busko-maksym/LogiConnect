@@ -2,7 +2,7 @@ from fastapi import Depends, APIRouter, Query
 from vacancies.models import VacancyCreate
 from user_actions.jwt_op import verify_token
 from vacancies.appLogic import (create_vacancies, apply_vacancy, find_vacancy,
-                                all_vacancies, get_applicants, delete_vac,
+                                get_applicants, delete_vac,
                                 accept_vacancy, close_vacancy, potential_employees,
                                 get_distance_osrm, vacancies_radius, consolidation,
                                 filter_vacancies)
@@ -25,11 +25,6 @@ async def vacancy_apply(vacancies_id: str, decoded_token: dict = Depends(verify_
 @router.get("/{id}")
 async def get_vacancy(_id: str):
     return find_vacancy(_id)
-
-
-@router.get("/")
-async def get_vacancies():
-    return all_vacancies()
 
 
 @router.get("/{id}/applicants")
@@ -91,4 +86,4 @@ async def get_vacancies(
         "max_weight": max_weight,
         "max_volume": max_volume,
         "urgency": urgency
-    }, page)
+    }, page, token)
