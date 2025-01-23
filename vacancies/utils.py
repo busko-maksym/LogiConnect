@@ -40,7 +40,6 @@ def generate_intermediate_points(start, end, num_points=10):
 
 def is_within_radius(point1, point2, radius_km=60):
     km = geodesic(point1, point2).kilometers
-    print(km)
     return km <= radius_km
 
 
@@ -50,11 +49,9 @@ def consolidate_by_points(points, location_one, location_two, radius_km=30, cosi
 
     cosine_sim = cosine_similarity(vector_AB, vector_CD)
     if cosine_sim < cosine_threshold:
-        print("cosine: "+str(cosine_sim))
         return False
     start_match = any(is_within_radius(location_two[0], point, radius_km) for point in points)
     end_match = any(is_within_radius(location_two[1], point, radius_km) for point in points)
-    print(start_match, end_match)
     return start_match and end_match
 
 

@@ -2,10 +2,10 @@ from fastapi import Depends, APIRouter, Query
 from vacancies.models import VacancyCreate
 from user_actions.jwt_op import verify_token
 from vacancies.appLogic import (create_vacancies, apply_vacancy, find_vacancy,
-                                get_applicants, delete_vac,
+                                get_applicants, delete_vac,user_vacancies,
                                 accept_vacancy, close_vacancy, potential_employees,
                                 get_distance_osrm, vacancies_radius, consolidation,
-                                filter_vacancies)
+                                filter_vacancies, all_vacancies)
 from typing import Optional, List
 
 
@@ -20,6 +20,11 @@ async def vacancies_create(vacancies: VacancyCreate, decoded_token: dict = Depen
 @router.post("/{id}/apply")
 async def vacancy_apply(vacancies_id: str, decoded_token: dict = Depends(verify_token)):
     return apply_vacancy(vacancies_id, decoded_token)
+
+
+@router.get("/")
+async def vacancies_list():
+    return all_vacancies()
 
 
 @router.get("/{id}")
@@ -87,3 +92,8 @@ async def get_vacancies(
         "max_volume": max_volume,
         "urgency": urgency
     }, page, token)
+
+
+@router.post("/my")
+async def my_vacancies(token: dict = Depends(verify_token)):
+    return user_vacancies(token)

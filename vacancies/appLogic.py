@@ -52,7 +52,7 @@ def apply_vacancy(vacancy_id, token):
             }
         )
         return {"msg": "Applied successfully"}
-    except TypeError:
+    except (TypeError, KeyError):
         return {"msg": "This vacancy doesn't exist"}
 
 
@@ -116,12 +116,14 @@ async def get_users_vacancy(vacancy):
         user_locations = user.get("locations", [])
         user_max_weight = user.get("max_weight", None)
         user_max_volume = user.get("max_volume", None)
-        del user["password"]
+        user.pop("password", None)
 
         if user_locations and isinstance(user_locations, list):
             for user_location in user_locations:
-                print(user_location, vacancy_location)
-                distance_km = geodesic(user_location, vacancy_location).kilometers
+                try:
+                    distance_km = geodesic(user_location, vacancy_location).kilometers
+                except ValueError:
+                    break
                 if distance_km <= 30.0:
                     if user_max_weight is None or vacancy["weight"] <= user_max_weight:
                         if user_max_volume is None or vacancy["volume"] <= user_max_volume:
@@ -202,7 +204,7 @@ async def potential_employees(vacancy, token):
 
 async def get_distance_osrm(start_city, end_city):
     if start_city is False or end_city is False:
-        return {"msg": "An unexpected error occurred"}
+        return {"distance is unknown"}
 
     if not start_city or not end_city:
         return "Could not find coordinates for one or both cities."
@@ -236,23 +238,45 @@ def vacancies_radius(location, token):
 
 def consolidation(vacancy_id, token):
     user = customer_db.find_one({"_id": ObjectId(token["user_id"])})
+    car = cars_db.find_one({"user_id": ObjectId(token["user_id"])})
+    vacancy = vacancies_db.find_one({"_id": ObjectId(vacancy_id)})
+    query = {}
+
     if user:
-        to_return = []
-        vacancy = vacancies_db.find_one({"_id": ObjectId(vacancy_id)})
-        vacancies = vacancies_db.find()
-        points = generate_intermediate_points(vacancy["first_coords"], vacancy["second_coords"])
-        for vac in vacancies:
-            ab_vector = [vacancy["first_coords"], vacancy["second_coords"]]
-            cd_vector = [vac["first_coords"], vac["second_coords"]]
-            consolid_results = consolidate_by_points(points, ab_vector,
-                                                     cd_vector)
-            if consolid_results:
-                vac["_id"] = str(vac["_id"])
-                vac["avg_deviation"] = min(geodesic(actual, planned).km)
-                to_return.append(vac)
-        return to_return
+        pass
     else:
         return {"msg": "There is no user with this id in applicants"}
+
+    if car:
+        query["weight"] = {"$lt": car["weight"]-vacancy["weight"]}
+        query["volume"] = {"$lt": car["volume"]-vacancy["volume"]}
+
+    to_return = []
+    vacancies = vacancies_db.find(query)
+    points = generate_intermediate_points(vacancy["first_coords"], vacancy["second_coords"])
+    for vac in vacancies:
+        ab_vector = [tuple(vacancy["first_coords"]), tuple(vacancy["second_coords"])]
+        cd_vector = [tuple(vac["first_coords"]), tuple(vac["second_coords"])]
+        consolid_results = consolidate_by_points(points, ab_vector,
+                                                     cd_vector)
+        if consolid_results:
+            vac["_id"] = str(vac["_id"])
+            vac["user_id"] = str(vac["user_id"])
+            del vac["applicants"]
+            try:
+                a, b = ab_vector
+                c, d = cd_vector
+
+                vac["avg_deviation"] = get_route_length_osrm(
+                    [a, c, d, b]
+                ) - vac["distance"]
+            except Exception as e:
+                print(f"Error calculating deviation: {e}")
+                vac["avg_deviation"] = None
+
+            print(vac["avg_deviation"])
+            to_return.append(vac)
+    return {"msg": to_return}
 
 
 def filter_vacancies(filters, page, token):
@@ -271,3 +295,58 @@ def filter_vacancies(filters, page, token):
         obj["real_price"] = (car["waste"]+obj["weight"]*0.0013)
         obj["_id"] = str(obj["_id"])
     return {"vacancies": results}
+
+
+def all_vacancies():
+    vacancies = vacancies_db.find()
+    list_vacancies = []
+
+    for vacancy in vacancies:
+        vacancy["_id"] = str(vacancy["_id"])
+        vacancy["user_id"] = str(vacancy["user_id"])
+        if "applicants" in vacancy:
+            del vacancy["applicants"]  # Safely delete "applicants" from the vacancy document
+        list_vacancies.append(vacancy)
+
+    return {"msg": list_vacancies}
+
+
+def user_vacancies(token):
+    # Helper function to fetch and clean cursor data
+    def fetch_and_clean(cursor):
+        lst = []
+        for vac in cursor:
+            dict_vac = dict(vac)
+            dict_vac["_id"] = str(dict_vac["_id"])
+            dict_vac["user_id"] = str(dict_vac["user_id"])
+            dict_vac["completed_by"] = str(dict_vac.get("completed_by", ""))  # Safe retrieval
+            dict_vac["last_id"] = str(dict_vac.get("last_id", ""))  # Safe retrieval
+            try:
+                del dict_vac["applicants"]
+            except KeyError:
+                continue
+            lst.append(dict_vac)
+        return lst
+
+    user_id = ObjectId(token["user_id"])
+
+    if token["acc_status"] == "driver":
+        vac_list = fetch_and_clean(history_db.find({"completed_by": user_id}))
+    else:
+        user_vacancies = fetch_and_clean(vacancies_db.find({"user_id": user_id}))
+        history_vacancies = fetch_and_clean(history_db.find({"user_id": user_id}))
+        vac_list = user_vacancies + history_vacancies
+
+    return vac_list
+
+
+def get_route_length_osrm(coords):
+    base_url = "http://router.project-osrm.org/route/v1/driving/"
+    coord_string = ";".join([f"{lon},{lat}" for lat, lon in coords])
+    url = f"{base_url}{coord_string}?overview=false"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data['routes'][0]['distance'] / 1000
+    else:
+        raise Exception(f"Error fetching route: {response.status_code}, {response.text}")
