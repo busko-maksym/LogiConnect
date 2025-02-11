@@ -175,3 +175,10 @@ def user_pg(id_):
     user["_id"] = str(user["_id"])
     del user["password"]
     return user
+
+
+def my_acc(token):
+    user = customer_db.find_one({"_id": ObjectId(token["user_id"])})
+    user["_id"] = str(user["_id"])
+    del user["password"]
+    return user
