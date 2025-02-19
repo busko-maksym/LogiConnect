@@ -11,6 +11,7 @@ import sys
 from vacancies.telegram import main as telegram_main
 import uvicorn
 from multiprocessing import Process
+import os
 
 
 app = FastAPI()
@@ -33,16 +34,19 @@ app.include_router(user_router, prefix="/user")
 app.include_router(chat_router, prefix="/chat")
 
 
-def run_fastapi():
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+async def run_fastapi():
+    config = uvicorn.Config(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+    server = uvicorn.Server(config)
+    await server.serve()
 
-
-if __name__ == "__main__":
+async def main():
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
-    fastapi_process = Process(target=run_fastapi)
-    fastapi_process.start()
+    # Запускаємо FastAPI та Telegram-бота паралельно
+    fastapi_task = asyncio.create_task(run_fastapi())
+    telegram_task = asyncio.create_task(telegram_main())
 
-    asyncio.run(telegram_main())
+    await asyncio.gather(fastapi_task, telegram_task)
 
-    fastapi_process.join()
+if __name__ == "__main__":
+    asyncio.run(main())
