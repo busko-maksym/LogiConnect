@@ -26,7 +26,17 @@ cars_db = user_db["cars"]
 
 SECRET_KEY = "8plb0vl6-HkU89IU_GMYBKZIfvVmMOIqrFzvtdA0a14"
 
-redis_conn = redis.StrictRedis(host='localhost', port=6379, db=0)
+redis_host = "redis-production-e752.up.railway.app"
+redis_port = 6379  # Ensure this is the correct port (Railway may use a different one)
+redis_password = "wEQHCtEneqIJFCxPUyFulvqQccgbAbVu"  # Replace with actual password
+
+# Connect to Redis
+redis_conn = redis.StrictRedis(
+    host=redis_host,
+    port=redis_port,
+    password=redis_password,
+    decode_responses=True  # Optional: Makes sure responses are returned as strings
+)
 
 
 site_directory = "127.0.0.1:8000"
