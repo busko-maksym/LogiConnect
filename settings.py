@@ -23,20 +23,13 @@ history_db = vacancies["history"]
 filters_db = user_db["filters"]
 customer_db = user_db["customer"]
 cars_db = user_db["cars"]
-
+import os
 SECRET_KEY = "8plb0vl6-HkU89IU_GMYBKZIfvVmMOIqrFzvtdA0a14"
 
-redis_host = "redis-production-e752.up.railway.app"
-redis_port = 6379  # Ensure this is the correct port (Railway may use a different one)
-redis_password = "wEQHCtEneqIJFCxPUyFulvqQccgbAbVu"  # Replace with actual password
+REDIS_URL = os.getenv("REDIS_URL", "redis://default:wEQHCtEneqIJFCxPUyFulvqQccgbAbVu@gondola.proxy.rlwy.net:33419")
 
 # Connect to Redis
-redis_conn = redis.StrictRedis(
-    host=redis_host,
-    port=redis_port,
-    password=redis_password,
-    decode_responses=True  # Optional: Makes sure responses are returned as strings
-)
+redis_conn = redis.from_url(REDIS_URL, decode_responses=True)
 
 
 site_directory = "127.0.0.1:8000"
