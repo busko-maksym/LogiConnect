@@ -36,7 +36,7 @@ class Requests:
         for key in redis_conn.scan_iter():
             value = redis_conn.get(key)
 
-            value = value.decode('utf-8')
+            value = value.encode('utf-8')
             value_dict = json.loads(value)
             if value_dict["email"] == self.email:
                 return True
