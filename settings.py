@@ -32,7 +32,7 @@ REDIS_URL = os.getenv("REDIS_URL", "redis://default:wEQHCtEneqIJFCxPUyFulvqQccgb
 redis_conn = redis.from_url(REDIS_URL, decode_responses=True)
 
 
-site_directory = "127.0.0.1:8000"
+site_directory = "appealing-beauty-production.up.railway.app"
 
 origins = [
     "http://localhost:3000",
