@@ -46,14 +46,16 @@ def is_within_radius(point1, point2, radius_km=60):
 def consolidate_by_points(points, location_one, location_two, radius_km=30, cosine_threshold=0.8):
     vector_AB = get_vector(location_one[0], location_one[1])
     vector_CD = get_vector(location_two[0], location_two[1])
-
     cosine_sim = cosine_similarity(vector_AB, vector_CD)
-    if cosine_sim < cosine_threshold:
-        return False
+    if cosine_threshold < cosine_sim:
+        home_way = False
+    elif cosine_sim < -0.8:
+        home_way = True
+    else:
+        return [None, False]
     start_match = any(is_within_radius(location_two[0], point, radius_km) for point in points)
     end_match = any(is_within_radius(location_two[1], point, radius_km) for point in points)
-    return start_match and end_match
-
+    return [home_way, start_match and end_match]
 
 def get_vector(start, end):
     return (end[0] - start[0], end[1] - start[1])

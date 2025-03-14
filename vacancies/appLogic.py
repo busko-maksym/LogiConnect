@@ -3,11 +3,12 @@ from vacancies.utils import (get_coordinates, consolidate_by_points,
                              generate_intermediate_points)
 from settings import (vacancies_db, filters_db, customer_db,
                       site_directory, history_db, cars_db)
-from bson import ObjectId
 from vacancies.telegram import bot
 import requests
 from geopy.distance import geodesic
 from user_actions.utils import send_email
+from concurrent.futures import ThreadPoolExecutor
+from bson import ObjectId
 
 
 async def create_vacancies(parametrs, token):
@@ -17,12 +18,15 @@ async def create_vacancies(parametrs, token):
         parametrs.first_coords = get_coordinates(parametrs.location_from)
         parametrs.second_coords = get_coordinates(parametrs.location_to)
         distance = await get_distance_osrm(parametrs.first_coords, parametrs.second_coords)
-        parametrs.salary_per_km = round(parametrs.salary_range / distance, 3)
-        parametrs.distance = round(distance, 1)
+        try:
+            parametrs.salary_per_km = round(int(parametrs.salary_range)/int(distance), 3)
+            parametrs.distance = round(distance, 1)
+        except Exception:
+            parametrs.salary_per_km = "Unknown"
+            parametrs.distance = "Unknown"
         x = vacancies_db.insert_one(parametrs.__dict__)
         users = await get_users_vacancy(parametrs.__dict__)
         for user in users:
-            print(user["telegram"])
             await bot.send_message(chat_id=user["telegram"],
                                    text=f"it seems that you are ideal to apply:\n {parametrs.title}"
                                         f"\n{site_directory}/vacancies/{x.inserted_id}"
@@ -127,9 +131,9 @@ async def get_users_vacancy(vacancy):
                 if distance_km <= 30.0:
                     if user_max_weight is None or vacancy["weight"] <= user_max_weight:
                         if user_max_volume is None or vacancy["volume"] <= user_max_volume:
-                            result_users.append(user)
-                    break
 
+                            result_users.append(customer_db.find_one({"_id": ObjectId(user["user_id"])}))
+                    break
     return result_users
 
 
@@ -236,46 +240,64 @@ def vacancies_radius(location, token):
     return vacancies_list
 
 
-def consolidation(vacancy_id, token):
+def process_vacancy(vac, vacancy, points):
+    """Processes a single vacancy in parallel."""
+    if not isinstance(vac, dict) or "first_coords" not in vac or "second_coords" not in vac:
+        print(f"Invalid vacancy format: {vac}")  # Debugging
+        return None
+
+    try:
+        ab_vector = [tuple(vacancy["first_coords"]), tuple(vacancy["second_coords"])]
+        cd_vector = [tuple(vac["first_coords"]), tuple(vac["second_coords"])]
+    except TypeError as e:
+        print(f"Type error with vacancy coordinates: {e}, vacancy: {vac}")
+        return None
+
+    consolid_results = consolidate_by_points(points, ab_vector, cd_vector)
+
+    if consolid_results[0] is None or consolid_results[1] is False:
+        return None
+
+    vac["_id"] = str(vac["_id"])
+    vac["user_id"] = str(vac["user_id"])
+    vac.pop("applicants", None)  # Safely remove 'applicants' if it exists
+
+    try:
+        a, b = ab_vector
+        c, d = cd_vector
+        vac["avg_deviation"] = get_route_length_osrm([a, c, d, b]) - vac["distance"]
+    except Exception as e:
+        print(f"Error calculating deviation: {e}")
+        vac["avg_deviation"] = None
+    print(vac)
+    return vac
+
+
+def consolidation_return(vacancy_id, token):
     user = customer_db.find_one({"_id": ObjectId(token["user_id"])})
     car = cars_db.find_one({"user_id": ObjectId(token["user_id"])})
     vacancy = vacancies_db.find_one({"_id": ObjectId(vacancy_id)})
     query = {}
 
-    if user:
-        pass
-    else:
+    if not user:
         return {"msg": "There is no user with this id in applicants"}
 
     if car:
-        query["weight"] = {"$lt": car["weight"]-vacancy["weight"]}
-        query["volume"] = {"$lt": car["volume"]-vacancy["volume"]}
+        query["weight"] = {"$lt": car["weight"] - vacancy["weight"]}
+        query["volume"] = {"$lt": car["volume"] - vacancy["volume"]}
+
+    vacancies = list(vacancies_db.find(query))
+    points = generate_intermediate_points(vacancy["first_coords"], vacancy["second_coords"])
 
     to_return = []
-    vacancies = vacancies_db.find(query)
-    points = generate_intermediate_points(vacancy["first_coords"], vacancy["second_coords"])
-    for vac in vacancies:
-        ab_vector = [tuple(vacancy["first_coords"]), tuple(vacancy["second_coords"])]
-        cd_vector = [tuple(vac["first_coords"]), tuple(vac["second_coords"])]
-        consolid_results = consolidate_by_points(points, ab_vector,
-                                                     cd_vector)
-        if consolid_results:
-            vac["_id"] = str(vac["_id"])
-            vac["user_id"] = str(vac["user_id"])
-            del vac["applicants"]
-            try:
-                a, b = ab_vector
-                c, d = cd_vector
 
-                vac["avg_deviation"] = get_route_length_osrm(
-                    [a, c, d, b]
-                ) - vac["distance"]
-            except Exception as e:
-                print(f"Error calculating deviation: {e}")
-                vac["avg_deviation"] = None
+    # Use ThreadPoolExecutor to process vacancies in parallel
+    with ThreadPoolExecutor() as executor:
+        results = list(executor.map(lambda vac: process_vacancy(vac, vacancy, points), vacancies))
 
-            print(vac["avg_deviation"])
-            to_return.append(vac)
+    # Filter out None results
+    to_return = [vac for vac in results if vac]
+
     return {"msg": to_return}
 
 

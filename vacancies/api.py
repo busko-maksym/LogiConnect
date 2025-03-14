@@ -2,9 +2,9 @@ from fastapi import Depends, APIRouter, Query
 from vacancies.models import VacancyCreate
 from user_actions.jwt_op import verify_token
 from vacancies.appLogic import (create_vacancies, apply_vacancy, find_vacancy,
-                                get_applicants, delete_vac,user_vacancies,
+                                get_applicants, delete_vac, user_vacancies,
                                 accept_vacancy, close_vacancy, potential_employees,
-                                get_distance_osrm, vacancies_radius, consolidation,
+                                get_distance_osrm, vacancies_radius, consolidation_return,
                                 filter_vacancies, all_vacancies)
 from typing import Optional, List
 
@@ -70,7 +70,7 @@ async def radius(start_radius: str, decoded_token: dict = Depends(verify_token))
 
 @router.post("/{vacancies_id}/consolidation")
 async def consolidate(vacancies_id: str, token: dict = Depends(verify_token)):
-    return consolidation(vacancies_id, token)
+    return consolidation_return(vacancies_id, token)
 
 
 @router.get("/vacancies")
