@@ -185,6 +185,9 @@ def my_acc(token):
 
 
 def beta_driver_create(data):
+    users_list = beta_users.find_one({"email": data.email})
+    if users_list:
+        return {"msg": "You've already sent a request"}
     user = beta_users.insert_one(data.__dict__)
     send_email("you applied for beta-test of LogiConnect. Thank you for your time, "
                "when we will release, you will be first to hear about that!"
