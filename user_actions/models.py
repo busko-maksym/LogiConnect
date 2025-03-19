@@ -1,4 +1,4 @@
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, EmailStr
 from typing import List, Optional
 from enum import Enum
 from vacancies.models import Urgency
@@ -73,3 +73,18 @@ class CarAdd(BaseModel):
     max_volume: int
     max_weight: int
     fridge: bool
+
+
+class Account(str, Enum):
+    driver = "driver"
+    business = "business"
+    logistics = "logistics"
+
+
+class BetaDriver(BaseModel):
+    acc_type: Account
+    business_description: str = None
+    email: EmailStr
+    full_name: str
+    phone: str = None
+    notifications_enabled: bool = True

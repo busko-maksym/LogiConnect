@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from user_actions.appLogic import (register, login, Requests, preferences_create,
-                                   add_car, my_acc, user_pg)
+                                   add_car, my_acc, user_pg, beta_driver_create)
 from user_actions.models import (TruckDriverCreate, BusinessOwnerCreate,
                                  TransportCompanyOwnerCreate, MainUserData, UserPreference,
-                                 CarAdd)
+                                 CarAdd, BetaDriver)
 from typing import Any
 from user_actions.jwt_op import verify_token
 
@@ -74,3 +74,8 @@ async def user_page(user_id):
 @router.get("/user/me")
 async def me(token: dict = Depends(verify_token)):
     return my_acc(token)
+
+
+@router.post("/beta/driver")
+async def driver(driver_data: BetaDriver):
+    return beta_driver_create(driver_data)

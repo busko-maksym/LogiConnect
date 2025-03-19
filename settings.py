@@ -2,7 +2,7 @@ import pymongo
 import fastapi
 import redis
 from aiogram import Bot, Dispatcher
-from os import getenv
+import os
 
 app = fastapi.FastAPI()
 
@@ -18,12 +18,15 @@ vacancies = client["Vacancies"]
 
 messages_db = chat_db["messages"]
 user_chat_db = chat_db["chats"]
+
 vacancies_db = vacancies["vacancies"]
 history_db = vacancies["history"]
+
 filters_db = user_db["filters"]
 customer_db = user_db["customer"]
 cars_db = user_db["cars"]
-import os
+beta_users = user_db["beta_users"]
+
 SECRET_KEY = "8plb0vl6-HkU89IU_GMYBKZIfvVmMOIqrFzvtdA0a14"
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://default:wEQHCtEneqIJFCxPUyFulvqQccgbAbVu@gondola.proxy.rlwy.net:33419")

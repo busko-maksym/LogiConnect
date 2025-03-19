@@ -1,4 +1,4 @@
-from settings import customer_db, redis_conn, site_directory, filters_db, cars_db
+from settings import customer_db, redis_conn, site_directory, filters_db, cars_db, beta_users
 from user_actions.utils import send_email, hashing, check_model
 from vacancies.appLogic import get_coordinates
 from user_actions.jwt_op import jwt_en
@@ -106,7 +106,7 @@ class Requests:
         credentials_json = json.dumps({"email": user["email"]})
         redis_conn.set(hashed_user, credentials_json, ex=3600)
         return {"msg": "You succesfully sent request, now go to link",
-                "link": f"t.me/LogiConnect_bot?start={hashed_user}"}
+                "link": f"t.me/LogiConnect_bot?start=connect-{hashed_user}"}
 
 
 def login(credentials):
@@ -182,3 +182,13 @@ def my_acc(token):
     user["_id"] = str(user["_id"])
     del user["password"]
     return user
+
+
+def beta_driver_create(data):
+    user = beta_users.insert_one(data.__dict__)
+    send_email("you applied for beta-test of LogiConnect. Thank you for your time, "
+               "when we will release, you will be first to hear about that!"
+               "we will be very happy if you had connected telegram "
+               f"t.me/LogiConnect_bot?start=beta-{str(user.inserted_id)}", data.email)
+    return ("you applied successfully and you can connect your telegram now! "
+            f"t.me/LogiConnect_bot?start=beta-{str(user.inserted_id)}")
