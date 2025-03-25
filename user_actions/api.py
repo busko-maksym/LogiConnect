@@ -89,5 +89,5 @@ async def transfer(id_: str):
 
 
 @router.post("/message")
-async def message(message: str):
-    return messaging(message)
+async def message(messages: str):
+    return await messaging(messages)

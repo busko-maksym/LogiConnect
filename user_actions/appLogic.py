@@ -200,10 +200,12 @@ def beta_transfer(id_):
     return beta_users.find_one({"_id": ObjectId(id_)})
 
 
-def messaging(message):
-    users = beta_users.find()
+async def messaging(message):
+    users = list(beta_users.find())  # Convert cursor to list
     for user in users:
-        print(user)
-        bot.send_message(user["telegram"], message)
-        send_email(message, user["email"])
+        try:
+            await bot.send_message(user["telegram"], message)
+        except Exception:
+            send_email(message, user["email"])
+
     return {"msg": "Your message has been sent"}
