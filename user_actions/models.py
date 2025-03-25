@@ -85,8 +85,7 @@ class BetaDriver(BaseModel):
     acc_type: Account
     business_description: str = None
     email: EmailStr
-    name: str
-    surname: str
+    full_name: str
     phone: str = None
     advertisement: str
     notifications_enabled: bool = True
