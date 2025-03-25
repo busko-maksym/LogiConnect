@@ -89,3 +89,4 @@ class BetaDriver(BaseModel):
     phone: str = None
     advertisement: str
     notifications_enabled: bool = True
+
