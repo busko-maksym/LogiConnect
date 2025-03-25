@@ -5,7 +5,7 @@ from user_actions.jwt_op import jwt_en
 from user_actions.models import Mail
 import json
 from bson import ObjectId
-
+from vacancies.telegram import bot
 
 def register(credentials):
     if customer_db.find_one({"email": credentials.email}):
@@ -104,7 +104,7 @@ class Requests:
         if result: return {"msg": "You've already sent a request"}
         hashed_user = hashing(user["email"])
         credentials_json = json.dumps({"email": user["email"]})
-        redis_conn.set(hashed_user, credentials_json, ex=3600)
+        redis_conn.set(hashed_user, credentials_json, ex=10800)
         return {"msg": "You succesfully sent request, now go to link",
                 "link": f"t.me/LogiConnect_bot?start=connect-{hashed_user}"}
 
@@ -193,5 +193,17 @@ def beta_driver_create(data):
                "when we will release, you will be first to hear about that!"
                "we will be very happy if you had connected telegram "
                f"t.me/LogiConnect_bot?start=beta-{str(user.inserted_id)}", data.email)
-    return ("you applied successfully and you can connect your telegram now! "
-            f"t.me/LogiConnect_bot?start=beta-{str(user.inserted_id)}")
+    return {"link": f"t.me/LogiConnect_bot?start=beta-{str(user.inserted_id)}"}
+
+
+def beta_transfer(id_):
+    return beta_users.find_one({"_id": ObjectId(id_)})
+
+
+def messaging(message):
+    users = beta_users.find()
+    for user in users:
+        print(user)
+        bot.send_message(user["telegram"], message)
+        send_email(message, user["email"])
+    return {"msg": "Your message has been sent"}

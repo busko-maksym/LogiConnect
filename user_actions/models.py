@@ -1,4 +1,4 @@
-from pydantic import BaseModel, model_validator, EmailStr
+from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from enum import Enum
 from vacancies.models import Urgency
@@ -85,6 +85,8 @@ class BetaDriver(BaseModel):
     acc_type: Account
     business_description: str = None
     email: EmailStr
-    full_name: str
+    name: str
+    surname: str
     phone: str = None
+    advertisement: str
     notifications_enabled: bool = True

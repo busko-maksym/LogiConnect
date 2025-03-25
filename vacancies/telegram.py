@@ -6,7 +6,6 @@ from aiogram.filters import CommandStart
 from settings import site_directory, redis_conn
 from settings import customer_db, beta_users
 import json
-from pydantic import validate_email
 from bson import ObjectId
 
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))

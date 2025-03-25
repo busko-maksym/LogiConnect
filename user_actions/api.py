@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends
 from user_actions.appLogic import (register, login, Requests, preferences_create,
-                                   add_car, my_acc, user_pg, beta_driver_create)
+                                   add_car, my_acc, user_pg, beta_driver_create,
+                                   beta_transfer, messaging)
 from user_actions.models import (TruckDriverCreate, BusinessOwnerCreate,
                                  TransportCompanyOwnerCreate, MainUserData, UserPreference,
                                  CarAdd, BetaDriver)
+from pydantic import EmailStr
 from typing import Any
 from user_actions.jwt_op import verify_token
 
@@ -79,3 +81,13 @@ async def me(token: dict = Depends(verify_token)):
 @router.post("/beta/driver")
 async def driver(driver_data: BetaDriver):
     return beta_driver_create(driver_data)
+
+
+@router.post("/beta/transfer/{id_}")
+async def transfer(id_: str):
+    return beta_transfer(id_)
+
+
+@router.post("/message")
+async def message(message: str):
+    return messaging(message)
