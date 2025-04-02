@@ -7,7 +7,7 @@ from vacancies.appLogic import (create_vacancies, apply_vacancy, find_vacancy,
                                 get_distance_osrm, vacancies_radius, consolidation_return,
                                 filter_vacancies, all_vacancies)
 from typing import Optional, List
-
+from fastapi_utils.tasks import repeat_every
 
 router = APIRouter()
 
@@ -18,8 +18,8 @@ async def vacancies_create(vacancies: VacancyCreate, decoded_token: dict = Depen
 
 
 @router.post("/{id}/apply")
-async def vacancy_apply(vacancies_id: str, decoded_token: dict = Depends(verify_token)):
-    return apply_vacancy(vacancies_id, decoded_token)
+async def vacancy_apply(vacancies_id: str, suggested_price: str = None, decoded_token: dict = Depends(verify_token)):
+    return apply_vacancy(vacancies_id, decoded_token, suggested_price)
 
 
 @router.get("/")
@@ -56,6 +56,16 @@ async def close(id_: str, description: str = None, mark: float = None,
 @router.post("/{id}/applicants/potential")
 async def potential(_id: str, decoded_token: dict = Depends(verify_token)):
     return await potential_employees(_id, decoded_token)
+
+
+@router.on_startup()
+@repeat_every(seconds=300)
+def check_tenders_status():
+    results = va.find({"end_time": {"$ne": None}})
+    now = datetime.utcnow()
+    for tender in tenders_db:
+        if tender.end_time <= now:
+            tender.status = "closed"
 
 
 @router.post("/distance")

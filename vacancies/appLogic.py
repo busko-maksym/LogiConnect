@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.exc import NoResultFound
 from vacancies.utils import (get_coordinates, consolidate_by_points,
                              generate_intermediate_points)
@@ -28,25 +30,26 @@ async def create_vacancies(parametrs, token):
         users = await get_users_vacancy(parametrs.__dict__)
         for user in users:
             await bot.send_message(chat_id=user["telegram"],
-                                   text=f"it seems that you are ideal to apply:\n {parametrs.title}"
+                                   text=f"Ви ідеально підходите на цю вакансію:\n{parametrs.title}"
                                         f"\n{site_directory}/vacancies/{x.inserted_id}"
                                         f"\n{parametrs.description}"
                                         f"\n{parametrs.location_from}-->{parametrs.location_to}: {parametrs.distance}km📏"
-                                        f"\n{parametrs.salary_range}-->{parametrs.salary_range} {parametrs.currency}💸")
+                                        f"\n{parametrs.salary_range}-->{parametrs.salary_per_km} {parametrs.currency}💸")
         return {"msg": "Registered successfully",
                 "id": str(x.inserted_id)}
     else:
         return {"msg": "You don`t have right account type or creating vacancy isn`t available"}
 
 
-def apply_vacancy(vacancy_id, token):
+def apply_vacancy(vacancy_id, token, suggested_price):
     vacancy = vacancies_db.find_one({"_id": ObjectId(vacancy_id)})
     try:
-        if ObjectId(token["user_id"]) in vacancy["applicants"]:
+        applicants = [i["user_id"] for i in vacancy["applicants"]]
+        if ObjectId(token["user_id"]) in applicants:
             return {"msg": "You`ve already applied to this vacancy"}
         applicants_list = vacancy["applicants"]
-        applicants_list.append(ObjectId(token["user_id"]))
-
+        applicants_list.append({"user_id": ObjectId(token["user_id"]),
+                                "suggested_price": suggested_price})
         vacancies_db.update_one(
             {"_id": ObjectId(vacancy_id)},
             {
@@ -78,7 +81,7 @@ def get_applicants(vacancy_id, token):
         applicants_list = vacancy.get("applicants", [])
         lst = []
         for i in applicants_list:
-            user = customer_db.find_one({"_id": ObjectId(i)})
+            user = customer_db.find_one({"_id": ObjectId(i["user_id"])})
             user["_id"] = str(user["_id"])
 
             try:
@@ -178,7 +181,11 @@ def close_vacancy(id_, token, mark, description):
     user = customer_db.find_one({"_id": ObjectId(vacancy["completed_by"])})
     if vacancy["user_id"] != ObjectId(token["user_id"]):
         return {"msg": "it is not your vacancy"}
-    customer_db.update_one({"_id": vacancy["completed_by"]}, {"$set": {"marks": {str(mark): description}}})
+    complicant = customer_db.find_one({"_id": ObjectId(vacancy["completed_by"])})
+    customer_db.update_one({complicant, {"$push": {"marks": {"mark": str(mark),
+                                                             "description": description}}}})
+    avg_mark = (complicant["avg_mark"]*len(complicant["marks"])+mark)/(len(complicant["marks"])+1)
+    customer_db.update_one({complicant, {"$set": {"avg_mark": avg_mark}}})
     history_db.update_one({"last_id": ObjectId(id_)},
                           {
                               "$set": {
@@ -241,7 +248,6 @@ def vacancies_radius(location, token):
 
 
 def process_vacancy(vac, vacancy, points):
-    """Processes a single vacancy in parallel."""
     if not isinstance(vac, dict) or "first_coords" not in vac or "second_coords" not in vac:
         print(f"Invalid vacancy format: {vac}")  # Debugging
         return None
@@ -372,3 +378,11 @@ def get_route_length_osrm(coords):
         return data['routes'][0]['distance'] / 1000
     else:
         raise Exception(f"Error fetching route: {response.status_code}, {response.text}")
+
+
+def tender_end():
+    now = datetime.now()
+    results = vacancies_db.find({"end_time": {"$ne": None}})
+    for obj in results:
+        if obj["end_time"] <= now:
+            vacancies_db.delete_one({"_id": str(obj["_id"])})

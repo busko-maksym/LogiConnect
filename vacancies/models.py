@@ -23,7 +23,8 @@ class VacancyCreate(BaseModel):
     distance: Optional[int] = None
     first_coords: Optional[List[float]] = None
     second_coords: Optional[List[float]] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.now)
+    end_time: datetime = None
     weight: Optional[int]
     volume: Optional[int]
     requirements: List[str] = None
