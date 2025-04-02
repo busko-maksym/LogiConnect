@@ -5,7 +5,7 @@ from vacancies.appLogic import (create_vacancies, apply_vacancy, find_vacancy,
                                 get_applicants, delete_vac, user_vacancies,
                                 accept_vacancy, close_vacancy, potential_employees,
                                 get_distance_osrm, vacancies_radius, consolidation_return,
-                                filter_vacancies, all_vacancies)
+                                filter_vacancies, all_vacancies, tender_end)
 from typing import Optional, List
 from fastapi_utils.tasks import repeat_every
 
@@ -58,14 +58,10 @@ async def potential(_id: str, decoded_token: dict = Depends(verify_token)):
     return await potential_employees(_id, decoded_token)
 
 
-@router.on_startup()
-@repeat_every(seconds=300)
-def check_tenders_status():
-    results = va.find({"end_time": {"$ne": None}})
-    now = datetime.utcnow()
-    for tender in tenders_db:
-        if tender.end_time <= now:
-            tender.status = "closed"
+# @router.on_startup()
+# @repeat_every(seconds=300)
+# def check_tenders_status():
+#     tender_end()
 
 
 @router.post("/distance")

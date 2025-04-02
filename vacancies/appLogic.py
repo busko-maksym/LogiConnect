@@ -385,4 +385,6 @@ def tender_end():
     results = vacancies_db.find({"end_time": {"$ne": None}})
     for obj in results:
         if obj["end_time"] <= now:
-            vacancies_db.delete_one({"_id": str(obj["_id"])})
+            vacancies_db.update_one(obj, {"$set": {"show": False}})
+        else:
+            pass
