@@ -7,6 +7,7 @@ import json
 from bson import ObjectId
 from vacancies.telegram import bot
 
+
 def register(credentials):
     if customer_db.find_one({"email": credentials.email}):
         return {"msg": "There is already an account with this email"}

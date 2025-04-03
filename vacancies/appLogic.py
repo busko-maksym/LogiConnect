@@ -50,14 +50,7 @@ def apply_vacancy(vacancy_id, token, suggested_price):
         applicants_list = vacancy["applicants"]
         applicants_list.append({"user_id": ObjectId(token["user_id"]),
                                 "suggested_price": suggested_price})
-        vacancies_db.update_one(
-            {"_id": ObjectId(vacancy_id)},
-            {
-                "$set": {
-                    "applicants": applicants_list,
-                }
-            }
-        )
+        vacancies_db.update_one({vacancy, {"$push": {"applicants": applicants_list}}})
         return {"msg": "Applied successfully"}
     except (TypeError, KeyError):
         return {"msg": "This vacancy doesn't exist"}
@@ -326,7 +319,7 @@ def filter_vacancies(filters, page, token):
 
 
 def all_vacancies():
-    vacancies = vacancies_db.find()
+    vacancies = vacancies_db.find({"show": True})
     list_vacancies = []
 
     for vacancy in vacancies:

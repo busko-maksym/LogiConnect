@@ -25,6 +25,11 @@ class VacancyCreate(BaseModel):
     location_from: str
     location_to: str
     salary_range: Optional[float] = None
+    salary_per_km: Optional[float] = None
+    user_id: str
+    distance: Optional[int] = None
+    first_coords: Optional[List[float]] = None
+    second_coords: Optional[List[float]] = None
     created_at: datetime = Field(default_factory=datetime.now)
     end_time: datetime = None
     weight: Optional[int]
@@ -33,5 +38,6 @@ class VacancyCreate(BaseModel):
     additional_info: Optional[str] = None
     currency: Currency = Currency.uah
     urgency: Optional[Urgency] = None
+    applicants: Optional[List[str]] = []
 
 
